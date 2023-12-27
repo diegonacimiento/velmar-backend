@@ -1,7 +1,8 @@
-import { PartialType } from '@nestjs/swagger';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { IsNotEmpty, IsPositive, IsString, IsUrl } from 'class-validator';
 
 export class CreateProductDto {
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   readonly name: string;
