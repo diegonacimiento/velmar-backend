@@ -18,6 +18,7 @@ import config from 'src/config';
           password,
           host,
           port,
+          autoLoadEntities: true,
         };
       },
     }),
