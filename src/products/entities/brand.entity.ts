@@ -1,35 +1,25 @@
 import { Exclude } from 'class-transformer';
 import {
   Column,
-  Entity,
   PrimaryGeneratedColumn,
+  Entity,
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
-  ManyToOne,
+  OneToMany,
   ManyToMany,
-  JoinColumn,
   JoinTable,
 } from 'typeorm';
-import { Brand } from './brand.entity';
+import { Product } from './product.entity';
 import { Category } from './category.entity';
 
-@Entity('products')
-export class Product {
+@Entity('brands')
+export class Brand {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 70 })
+  @Column({ type: 'varchar', length: 60 })
   name: string;
-
-  @Column({ type: 'varchar', length: 355 })
-  description: string;
-
-  @Column({ type: 'int' })
-  price: number;
-
-  @Column({ type: 'int' })
-  stock: number;
 
   @Column({ type: 'varchar', length: 255 })
   image: string;
@@ -52,14 +42,13 @@ export class Product {
   @DeleteDateColumn({ name: 'deleted_at', type: 'timestamptz', default: null })
   deletedAt: Date;
 
-  @ManyToOne(() => Brand, (brand) => brand.products)
-  @JoinColumn({ name: 'brand_id' })
-  brand: Brand;
+  @OneToMany(() => Product, (product) => product.brand)
+  products: Product[];
 
-  @ManyToMany(() => Category, (category) => category.products)
+  @ManyToMany(() => Category, (category) => category.brands)
   @JoinTable({
-    name: 'categories_products',
-    joinColumn: { name: 'product_id' },
+    name: 'brands_categories',
+    joinColumn: { name: 'brand_id' },
     inverseJoinColumn: { name: 'category_id' },
   })
   categories: Category[];
