@@ -4,11 +4,17 @@ import { Repository } from 'typeorm';
 
 import { Product } from '../entities/product.entity';
 import { CreateProductDto, UpdateProductDto } from '../dtos/product.dto';
+import { Brand } from '../entities/brand.entity';
+import { Category } from '../entities/category.entity';
+import { addManyEntities, addOneEntity } from 'src/utils/shared-functions';
 
 @Injectable()
 export class ProductsService {
   constructor(
     @InjectRepository(Product) private productRepository: Repository<Product>,
+    @InjectRepository(Brand) private brandRepository: Repository<Brand>,
+    @InjectRepository(Category)
+    private categoryRepository: Repository<Category>,
   ) {}
 
   async getAll() {
@@ -16,7 +22,10 @@ export class ProductsService {
   }
 
   async getOne(id: number) {
-    const product = await this.productRepository.findOne({ where: { id } });
+    const product = await this.productRepository.findOne({
+      where: { id },
+      relations: ['brand', 'categories'],
+    });
     if (!product) {
       throw new NotFoundException('Product not found');
     }
@@ -25,6 +34,16 @@ export class ProductsService {
 
   async create(payload: CreateProductDto) {
     const newProduct = this.productRepository.create(payload);
+    if (payload.brandId) {
+      await addOneEntity(this.brandRepository, payload.brandId, newProduct);
+    }
+    if (payload.categoriesIds) {
+      await addManyEntities(
+        this.categoryRepository,
+        payload.categoriesIds,
+        newProduct,
+      );
+    }
     return await this.productRepository.save(newProduct);
   }
 

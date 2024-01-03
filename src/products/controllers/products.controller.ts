@@ -10,7 +10,9 @@ import {
 import { ProductsService } from '../services/products.service';
 import { MyParseIntPipe } from 'src/common/my-parse-int/my-parse-int.pipe';
 import { CreateProductDto, UpdateProductDto } from '../dtos/product.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('products')
 @Controller('products')
 export class ProductsController {
   constructor(private productsService: ProductsService) {}
@@ -27,7 +29,10 @@ export class ProductsController {
 
   @Post()
   async create(@Body() payload: CreateProductDto) {
-    return await this.productsService.create(payload);
+    return {
+      message: 'Product created',
+      product: await this.productsService.create(payload),
+    };
   }
 
   @Put(':id')
@@ -35,11 +40,17 @@ export class ProductsController {
     @Param('id', MyParseIntPipe) id: number,
     @Body() payload: UpdateProductDto,
   ) {
-    return await this.productsService.update(id, payload);
+    return {
+      message: 'Product updated',
+      product: await this.productsService.update(id, payload),
+    };
   }
 
   @Delete(':id')
   async delete(@Param('id', MyParseIntPipe) id: number) {
-    return await this.productsService.delete(id);
+    return {
+      message: 'Product deleted',
+      product: await this.productsService.delete(id),
+    };
   }
 }
