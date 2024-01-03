@@ -24,6 +24,7 @@ export class Brand {
   @Column({ type: 'varchar', length: 255 })
   image: string;
 
+  @Exclude()
   @CreateDateColumn({
     name: 'created_at',
     type: 'timestamptz',
@@ -31,6 +32,7 @@ export class Brand {
   })
   createdAt: Date;
 
+  @Exclude()
   @UpdateDateColumn({
     name: 'updated_at',
     type: 'timestamptz',

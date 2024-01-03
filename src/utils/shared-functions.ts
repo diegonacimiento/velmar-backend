@@ -13,9 +13,6 @@ export const addOneEntity = async (
     throw new NotFoundException(`${repository.metadata.name} not found`);
   }
 
-  delete entity.createdAt;
-  delete entity.updatedAt;
-
   newEntity[repository.metadata.name.toLowerCase()] = entity;
 };
 
@@ -34,9 +31,6 @@ export const addManyEntities = async (
         `${repository.metadata.name} with id ${id} not found`,
       );
     }
-
-    delete entity.createdAt;
-    delete entity.updatedAt;
 
     newEntity[repository.metadata.tableName].push(entity);
   }
