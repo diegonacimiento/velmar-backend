@@ -7,10 +7,13 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+
 import { UsersService } from '../services/users.service';
 import { MyParseIntPipe } from 'src/common/my-parse-int/my-parse-int.pipe';
 import { CreateUserDto, UpdateUserDto } from '../dtos/user.dto';
 
+@ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
@@ -27,7 +30,10 @@ export class UsersController {
 
   @Post()
   async create(@Body() payload: CreateUserDto) {
-    return await this.usersService.create(payload);
+    return {
+      message: 'User created',
+      user: await this.usersService.create(payload),
+    };
   }
 
   @Put(':id')
@@ -35,11 +41,17 @@ export class UsersController {
     @Param('id', MyParseIntPipe) id: number,
     @Body() payload: UpdateUserDto,
   ) {
-    return await this.usersService.update(id, payload);
+    return {
+      message: 'User updated',
+      user: await this.usersService.update(id, payload),
+    };
   }
 
   @Delete(':id')
   async delete(@Param('id', MyParseIntPipe) id: number) {
-    return await this.usersService.delete(id);
+    return {
+      message: 'User deleted',
+      user: await this.usersService.delete(id),
+    };
   }
 }

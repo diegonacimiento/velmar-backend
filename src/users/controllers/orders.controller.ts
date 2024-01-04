@@ -7,10 +7,13 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+
 import { OrdersService } from '../services/orders.service';
 import { MyParseIntPipe } from 'src/common/my-parse-int/my-parse-int.pipe';
 import { CreateOrderDto, UpdateOrderDto } from '../dtos/order.dto';
 
+@ApiTags('orders')
 @Controller('orders')
 export class OrdersController {
   constructor(private ordersService: OrdersService) {}
@@ -27,7 +30,10 @@ export class OrdersController {
 
   @Post()
   async create(@Body() payload: CreateOrderDto) {
-    return await this.ordersService.create(payload);
+    return {
+      message: 'Order created',
+      order: await this.ordersService.create(payload),
+    };
   }
 
   @Put(':id')
@@ -35,11 +41,17 @@ export class OrdersController {
     @Param('id', MyParseIntPipe) id: number,
     @Body() payload: UpdateOrderDto,
   ) {
-    return await this.ordersService.update(id, payload);
+    return {
+      message: 'Order updated',
+      order: await this.ordersService.update(id, payload),
+    };
   }
 
   @Delete(':id')
   async delete(@Param('id', MyParseIntPipe) id: number) {
-    return await this.ordersService.delete(id);
+    return {
+      message: 'Order deleted',
+      order: await this.ordersService.delete(id),
+    };
   }
 }

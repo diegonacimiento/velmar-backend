@@ -7,10 +7,11 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+
 import { ProductsService } from '../services/products.service';
 import { MyParseIntPipe } from 'src/common/my-parse-int/my-parse-int.pipe';
 import { CreateProductDto, UpdateProductDto } from '../dtos/product.dto';
-import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('products')
 @Controller('products')

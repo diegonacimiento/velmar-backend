@@ -8,6 +8,7 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
+
 import { User } from './user.entity';
 import { ItemOrder } from './item-order.entity';
 import { Exclude, Expose } from 'class-transformer';
@@ -45,10 +46,13 @@ export class Order {
 
   @Expose()
   get userDetails() {
-    delete this.user.createdAt;
-    delete this.user.updatedAt;
-    delete this.user.deletedAt;
-    return this.user;
+    if (this.user) {
+      delete this.user.createdAt;
+      delete this.user.updatedAt;
+      delete this.user.deletedAt;
+      return this.user;
+    }
+    return null;
   }
 
   @Expose()

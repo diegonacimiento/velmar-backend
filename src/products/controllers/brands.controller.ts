@@ -7,8 +7,9 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { BrandsService } from '../services/brands.service';
 import { ApiTags } from '@nestjs/swagger';
+
+import { BrandsService } from '../services/brands.service';
 import { MyParseIntPipe } from 'src/common/my-parse-int/my-parse-int.pipe';
 import { CreateBrandDto, UpdateBrandDto } from '../dtos/brand.dto';
 

@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ItemOrder } from '../entities/item-order.entity';
 import { Repository } from 'typeorm';
+
+import { ItemOrder } from '../entities/item-order.entity';
 import { CreateItemOrderDto, UpdateItemOrderDto } from '../dtos/item-order.dto';
 import { addOneEntity } from 'src/utils/shared-functions';
 import { Order } from '../entities/order.entity';
@@ -20,14 +21,14 @@ export class ItemsOrderService {
 
   async getAll() {
     return await this.itemOrderRepository.find({
-      relations: ['order', 'product'],
+      relations: ['order', 'order.user', 'product'],
     });
   }
 
   async getOne(id: number) {
     const item = await this.itemOrderRepository.findOne({
       where: { id },
-      relations: ['order', 'product'],
+      relations: ['order', 'order.user', 'product'],
     });
 
     if (!item) {

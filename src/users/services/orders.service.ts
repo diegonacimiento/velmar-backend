@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Order } from '../entities/order.entity';
 import { Repository } from 'typeorm';
+
+import { Order } from '../entities/order.entity';
 import { CreateOrderDto, UpdateOrderDto } from '../dtos/order.dto';
 import { addOneEntity } from 'src/utils/shared-functions';
 import { User } from '../entities/user.entity';

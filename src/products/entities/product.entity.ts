@@ -11,6 +11,7 @@ import {
   JoinColumn,
   JoinTable,
 } from 'typeorm';
+
 import { Brand } from './brand.entity';
 import { Category } from './category.entity';
 

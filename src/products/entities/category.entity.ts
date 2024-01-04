@@ -8,6 +8,7 @@ import {
   DeleteDateColumn,
   ManyToMany,
 } from 'typeorm';
+
 import { Product } from './product.entity';
 import { Brand } from './brand.entity';
 

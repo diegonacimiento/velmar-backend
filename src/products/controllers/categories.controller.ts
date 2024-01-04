@@ -7,8 +7,9 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { CategoriesService } from '../services/categories.service';
 import { ApiTags } from '@nestjs/swagger';
+
+import { CategoriesService } from '../services/categories.service';
 import { MyParseIntPipe } from 'src/common/my-parse-int/my-parse-int.pipe';
 import { CreateCategoryDto, UpdateCategoryDto } from '../dtos/category.dto';
 
