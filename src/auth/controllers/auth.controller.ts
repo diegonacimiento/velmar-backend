@@ -10,7 +10,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 
-import { ValidateCredentialsGuard } from '../guards/validate-credentials/validate-credentials.guard';
+import { ValidateCredentialsGuard } from '../guards/validate-credentials.guard';
 import { User } from 'src/users/entities/user.entity';
 import { AuthService } from '../services/auth.service';
 
