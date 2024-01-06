@@ -10,6 +10,7 @@ import {
   addCategory,
   addManyEntities,
   addOneEntity,
+  changeEntityRelated,
   removeCategory,
 } from 'src/utils/shared-functions';
 
@@ -73,6 +74,12 @@ export class ProductsService {
   async removeCategory(id: number, categoryId: number) {
     const product = await this.getOne(id);
     removeCategory(product, categoryId);
+    return await this.productRepository.save(product);
+  }
+
+  async changeBrand(id: number, brandId: number) {
+    const product = await this.getOne(id);
+    await changeEntityRelated(this.brandRepository, brandId, product);
     return await this.productRepository.save(product);
   }
 }

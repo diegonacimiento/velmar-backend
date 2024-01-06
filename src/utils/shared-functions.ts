@@ -74,3 +74,25 @@ export const removeCategory = (entity: any, categoryId: number) => {
 
   delete entity.categories[index];
 };
+
+export const changeEntityRelated = async (
+  repository: any,
+  id: number,
+  entity: any,
+) => {
+  if (entity[repository.metadata.name.toLowerCase()].id === id) {
+    throw new BadRequestException(
+      `${repository.metadata.name} is already related`,
+    );
+  }
+
+  const entityRelated = await repository.findOne({
+    where: { id },
+  });
+
+  if (!entityRelated) {
+    throw new NotFoundException(`${repository.metadata.name} not found`);
+  }
+
+  entity[repository.metadata.name.toLowerCase()] = entityRelated;
+};

@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 
 import { Order } from '../entities/order.entity';
 import { CreateOrderDto, UpdateOrderDto } from '../dtos/order.dto';
-import { addOneEntity } from 'src/utils/shared-functions';
+import { addOneEntity, changeEntityRelated } from 'src/utils/shared-functions';
 import { User } from '../entities/user.entity';
 
 @Injectable()
@@ -53,5 +53,11 @@ export class OrdersService {
     const order = await this.getOne(id);
     await this.orderRepository.delete(id);
     return order;
+  }
+
+  async changeUser(id: number, userId: number) {
+    const order = await this.getOne(id);
+    await changeEntityRelated(this.userRepository, userId, order);
+    return await this.orderRepository.save(order);
   }
 }

@@ -54,4 +54,15 @@ export class OrdersController {
       order: await this.ordersService.delete(id),
     };
   }
+
+  @Put(':id/user/:userId')
+  async changeUser(
+    @Param('id', MyParseIntPipe) id: number,
+    @Param('userId', MyParseIntPipe) userId: number,
+  ) {
+    return {
+      message: 'User changed in the order',
+      order: await this.ordersService.changeUser(id, userId),
+    };
+  }
 }

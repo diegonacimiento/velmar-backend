@@ -76,4 +76,15 @@ export class ProductsController {
       product: await this.productsService.removeCategory(id, categoryId),
     };
   }
+
+  @Put(':id/brand/:brandId')
+  async changeBrand(
+    @Param('id', MyParseIntPipe) id: number,
+    @Param('brandId', MyParseIntPipe) brandId: number,
+  ) {
+    return {
+      message: 'Brand changed in product',
+      product: await this.productsService.changeBrand(id, brandId),
+    };
+  }
 }
