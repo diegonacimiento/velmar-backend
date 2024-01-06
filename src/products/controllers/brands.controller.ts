@@ -54,4 +54,26 @@ export class BrandsController {
       brand: await this.brandsService.delete(id),
     };
   }
+
+  @Put(':id/category/:categoryId')
+  async addCategory(
+    @Param('id', MyParseIntPipe) id: number,
+    @Param('categoryId', MyParseIntPipe) categoryId: number,
+  ) {
+    return {
+      message: 'Category added in brand',
+      brand: await this.brandsService.addCategory(id, categoryId),
+    };
+  }
+
+  @Delete(':id/category/:categoryId')
+  async removeCategory(
+    @Param('id', MyParseIntPipe) id: number,
+    @Param('categoryId', MyParseIntPipe) categoryId: number,
+  ) {
+    return {
+      message: 'Category removed from brand',
+      brand: await this.brandsService.removeCategory(id, categoryId),
+    };
+  }
 }

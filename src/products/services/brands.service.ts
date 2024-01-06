@@ -4,7 +4,11 @@ import { Repository } from 'typeorm';
 
 import { Brand } from '../entities/brand.entity';
 import { CreateBrandDto, UpdateBrandDto } from '../dtos/brand.dto';
-import { addManyEntities } from 'src/utils/shared-functions';
+import {
+  addCategory,
+  addManyEntities,
+  removeCategory,
+} from 'src/utils/shared-functions';
 import { Category } from '../entities/category.entity';
 
 @Injectable()
@@ -52,5 +56,17 @@ export class BrandsService {
     const brand = await this.getOne(id);
     await this.brandRepository.delete(id);
     return brand;
+  }
+
+  async addCategory(id: number, categoryId: number) {
+    const brand = await this.getOne(id);
+    await addCategory(this.categoryRepository, categoryId, brand);
+    return await this.brandRepository.save(brand);
+  }
+
+  async removeCategory(id: number, categoryId: number) {
+    const brand = await this.getOne(id);
+    removeCategory(brand, categoryId);
+    return await this.brandRepository.save(brand);
   }
 }

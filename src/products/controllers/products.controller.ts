@@ -54,4 +54,26 @@ export class ProductsController {
       product: await this.productsService.delete(id),
     };
   }
+
+  @Put(':id/category/:categoryId')
+  async addCategory(
+    @Param('id', MyParseIntPipe) id: number,
+    @Param('categoryId', MyParseIntPipe) categoryId: number,
+  ) {
+    return {
+      message: 'Category added in product',
+      product: await this.productsService.addCategory(id, categoryId),
+    };
+  }
+
+  @Delete(':id/category/:categoryId')
+  async removeCategory(
+    @Param('id', MyParseIntPipe) id: number,
+    @Param('categoryId', MyParseIntPipe) categoryId: number,
+  ) {
+    return {
+      message: 'Category removed from product',
+      product: await this.productsService.removeCategory(id, categoryId),
+    };
+  }
 }

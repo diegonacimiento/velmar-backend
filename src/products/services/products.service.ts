@@ -6,7 +6,12 @@ import { Product } from '../entities/product.entity';
 import { CreateProductDto, UpdateProductDto } from '../dtos/product.dto';
 import { Brand } from '../entities/brand.entity';
 import { Category } from '../entities/category.entity';
-import { addManyEntities, addOneEntity } from 'src/utils/shared-functions';
+import {
+  addCategory,
+  addManyEntities,
+  addOneEntity,
+  removeCategory,
+} from 'src/utils/shared-functions';
 
 @Injectable()
 export class ProductsService {
@@ -57,5 +62,17 @@ export class ProductsService {
     const product = await this.getOne(id);
     await this.productRepository.delete(id);
     return product;
+  }
+
+  async addCategory(id: number, categoryId: number) {
+    const product = await this.getOne(id);
+    await addCategory(this.categoryRepository, categoryId, product);
+    return await this.productRepository.save(product);
+  }
+
+  async removeCategory(id: number, categoryId: number) {
+    const product = await this.getOne(id);
+    removeCategory(product, categoryId);
+    return await this.productRepository.save(product);
   }
 }
