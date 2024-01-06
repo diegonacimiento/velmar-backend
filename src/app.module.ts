@@ -7,6 +7,7 @@ import { DatabaseModule } from './database/database.module';
 import { ProductsModule } from './products/products.module';
 import { UsersModule } from './users/users.module';
 import { environment } from './environment';
+import { AuthModule } from './auth/auth.module';
 import config from './config';
 import * as Joi from 'joi';
 
@@ -28,6 +29,7 @@ import * as Joi from 'joi';
         DATABASE_URL: Joi.string().required(),
       }),
     }),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
