@@ -5,6 +5,7 @@ import {
   IsOptional,
   IsPhoneNumber,
   IsString,
+  Matches,
   MinLength,
 } from 'class-validator';
 
@@ -12,6 +13,10 @@ export class CreateUserDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
+  @Matches(/^[a-zA-Z0-9_-]+$/, {
+    message:
+      'Invalid username. Only alphanumeric characters, hyphens, and underscores are allowed',
+  })
   readonly username: string;
 
   @IsString()
