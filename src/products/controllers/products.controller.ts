@@ -6,23 +6,29 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { ProductsService } from '../services/products.service';
 import { MyParseIntPipe } from 'src/common/my-parse-int/my-parse-int.pipe';
 import { CreateProductDto, UpdateProductDto } from '../dtos/product.dto';
+import { JwtGuard } from 'src/auth/guards/jwt.guard';
+import { Public } from 'src/auth/decorators/public.decorator';
 
 @ApiTags('products')
+@UseGuards(JwtGuard)
 @Controller('products')
 export class ProductsController {
   constructor(private productsService: ProductsService) {}
 
+  @Public()
   @Get()
   async getAll() {
     return await this.productsService.getAll();
   }
 
+  @Public()
   @Get(':id')
   async getOne(@Param('id', MyParseIntPipe) id: number) {
     return await this.productsService.getOne(id);

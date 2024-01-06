@@ -6,23 +6,29 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { CategoriesService } from '../services/categories.service';
 import { MyParseIntPipe } from 'src/common/my-parse-int/my-parse-int.pipe';
 import { CreateCategoryDto, UpdateCategoryDto } from '../dtos/category.dto';
+import { JwtGuard } from 'src/auth/guards/jwt.guard';
+import { Public } from 'src/auth/decorators/public.decorator';
 
 @ApiTags('categories')
+@UseGuards(JwtGuard)
 @Controller('categories')
 export class CategoriesController {
   constructor(private categoriesService: CategoriesService) {}
 
+  @Public()
   @Get()
   async getAll() {
     return await this.categoriesService.getAll();
   }
 
+  @Public()
   @Get(':id')
   async getOne(@Param('id', MyParseIntPipe) id: number) {
     return await this.categoriesService.getOne(id);

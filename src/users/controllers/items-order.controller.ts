@@ -6,14 +6,17 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { ItemsOrderService } from '../services/items-order.service';
 import { MyParseIntPipe } from 'src/common/my-parse-int/my-parse-int.pipe';
 import { CreateItemOrderDto, UpdateItemOrderDto } from '../dtos/item-order.dto';
+import { JwtGuard } from 'src/auth/guards/jwt.guard';
 
 @ApiTags('items-order')
+@UseGuards(JwtGuard)
 @Controller('items-order')
 export class ItemsOrderController {
   constructor(private itemsOrderService: ItemsOrderService) {}
