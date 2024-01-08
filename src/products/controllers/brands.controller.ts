@@ -15,9 +15,12 @@ import { MyParseIntPipe } from 'src/common/my-parse-int/my-parse-int.pipe';
 import { CreateBrandDto, UpdateBrandDto } from '../dtos/brand.dto';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { Public } from 'src/auth/decorators/public.decorator';
+import { RoleGuard } from 'src/auth/guards/role.guard';
+import { Role } from 'src/auth/decorators/role.decorator';
+import { ROLE } from 'src/auth/models/role.model';
 
 @ApiTags('brands')
-@UseGuards(JwtGuard)
+@UseGuards(JwtGuard, RoleGuard)
 @Controller('brands')
 export class BrandsController {
   constructor(private brandsService: BrandsService) {}
@@ -34,6 +37,7 @@ export class BrandsController {
     return await this.brandsService.getOne(id);
   }
 
+  @Role(ROLE.ADMIN)
   @Post()
   async create(@Body() payload: CreateBrandDto) {
     return {
@@ -42,6 +46,7 @@ export class BrandsController {
     };
   }
 
+  @Role(ROLE.ADMIN)
   @Put(':id')
   async update(
     @Param('id', MyParseIntPipe) id: number,
@@ -53,6 +58,7 @@ export class BrandsController {
     };
   }
 
+  @Role(ROLE.ADMIN)
   @Delete(':id')
   async delete(@Param('id', MyParseIntPipe) id: number) {
     return {
@@ -61,6 +67,7 @@ export class BrandsController {
     };
   }
 
+  @Role(ROLE.ADMIN)
   @Put(':id/category/:categoryId')
   async addCategory(
     @Param('id', MyParseIntPipe) id: number,
@@ -72,6 +79,7 @@ export class BrandsController {
     };
   }
 
+  @Role(ROLE.ADMIN)
   @Delete(':id/category/:categoryId')
   async removeCategory(
     @Param('id', MyParseIntPipe) id: number,

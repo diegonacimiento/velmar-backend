@@ -15,9 +15,12 @@ import { MyParseIntPipe } from 'src/common/my-parse-int/my-parse-int.pipe';
 import { CreateCategoryDto, UpdateCategoryDto } from '../dtos/category.dto';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { Public } from 'src/auth/decorators/public.decorator';
+import { RoleGuard } from 'src/auth/guards/role.guard';
+import { Role } from 'src/auth/decorators/role.decorator';
+import { ROLE } from 'src/auth/models/role.model';
 
 @ApiTags('categories')
-@UseGuards(JwtGuard)
+@UseGuards(JwtGuard, RoleGuard)
 @Controller('categories')
 export class CategoriesController {
   constructor(private categoriesService: CategoriesService) {}
@@ -34,6 +37,7 @@ export class CategoriesController {
     return await this.categoriesService.getOne(id);
   }
 
+  @Role(ROLE.ADMIN)
   @Post()
   async create(@Body() payload: CreateCategoryDto) {
     return {
@@ -42,6 +46,7 @@ export class CategoriesController {
     };
   }
 
+  @Role(ROLE.ADMIN)
   @Put(':id')
   async update(
     @Param('id', MyParseIntPipe) id: number,
@@ -53,6 +58,7 @@ export class CategoriesController {
     };
   }
 
+  @Role(ROLE.ADMIN)
   @Delete(':id')
   async delete(@Param('id', MyParseIntPipe) id: number) {
     return {
