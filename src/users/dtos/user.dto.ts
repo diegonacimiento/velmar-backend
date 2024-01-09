@@ -1,6 +1,7 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import {
   IsEmail,
+  IsIn,
   IsNotEmpty,
   IsOptional,
   IsPhoneNumber,
@@ -8,6 +9,7 @@ import {
   Matches,
   MinLength,
 } from 'class-validator';
+import { ROLE } from 'src/auth/models/role.model';
 
 export class CreateUserDto {
   @ApiProperty()
@@ -35,6 +37,9 @@ export class CreateUserDto {
 
   @IsString()
   @IsNotEmpty()
+  @IsIn([ROLE.CUSTOMER, ROLE.ADMIN], {
+    message: 'Role must be "customer" or "admin"',
+  })
   readonly role: string;
 
   @IsPhoneNumber()

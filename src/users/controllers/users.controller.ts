@@ -14,23 +14,30 @@ import { UsersService } from '../services/users.service';
 import { MyParseIntPipe } from 'src/common/my-parse-int/my-parse-int.pipe';
 import { CreateUserDto, UpdateUserDto } from '../dtos/user.dto';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
+import { RoleGuard } from 'src/auth/guards/role.guard';
+import { Role } from 'src/auth/decorators/role.decorator';
+import { ROLE } from 'src/auth/models/role.model';
+import { Public } from 'src/auth/decorators/public.decorator';
 
 @ApiTags('users')
-@UseGuards(JwtGuard)
+@UseGuards(JwtGuard, RoleGuard)
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
+  @Role(ROLE.SUPERADMIN)
   @Get()
   async getAll() {
     return await this.usersService.getAll();
   }
 
+  @Role(ROLE.SUPERADMIN)
   @Get(':id')
   async getOne(@Param('id', MyParseIntPipe) id: number) {
     return await this.usersService.getOne(id);
   }
 
+  @Public()
   @Post()
   async create(@Body() payload: CreateUserDto) {
     return {
@@ -39,6 +46,7 @@ export class UsersController {
     };
   }
 
+  @Role(ROLE.SUPERADMIN)
   @Put(':id')
   async update(
     @Param('id', MyParseIntPipe) id: number,
@@ -50,6 +58,7 @@ export class UsersController {
     };
   }
 
+  @Role(ROLE.SUPERADMIN)
   @Delete(':id')
   async delete(@Param('id', MyParseIntPipe) id: number) {
     return {

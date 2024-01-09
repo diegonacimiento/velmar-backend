@@ -60,4 +60,12 @@ export class OrdersService {
     await changeEntityRelated(this.userRepository, userId, order);
     return await this.orderRepository.save(order);
   }
+
+  async getAllByUser(userId: number) {
+    const orders = await this.orderRepository.find({
+      where: { user: { id: userId } },
+      relations: ['user', 'items', 'items.product'],
+    });
+    return orders;
+  }
 }

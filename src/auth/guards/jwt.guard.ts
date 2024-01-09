@@ -29,7 +29,7 @@ export class JwtGuard extends AuthGuard('jwt') {
 
   handleRequest(err: any, user: any) {
     if (err || !user) {
-      throw new UnauthorizedException('Unauthorized user');
+      throw new UnauthorizedException('Login required');
     }
     return user;
   }
