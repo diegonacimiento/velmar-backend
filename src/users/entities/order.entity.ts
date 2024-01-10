@@ -6,11 +6,10 @@ import {
   DeleteDateColumn,
   JoinColumn,
   ManyToOne,
-  OneToMany,
+  Column,
 } from 'typeorm';
 
 import { User } from './user.entity';
-import { ItemOrder } from './item-order.entity';
 import { Exclude, Expose } from 'class-transformer';
 
 @Entity('orders')
@@ -40,12 +39,11 @@ export class Order {
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @Exclude()
-  @OneToMany(() => ItemOrder, (item) => item.order)
-  items: ItemOrder[];
+  @Column('simple-json', { nullable: true })
+  products: Array<{ productId: number; quantity: number; price: number }>;
 
   @Expose()
-  get userDetails() {
+  get user_details() {
     if (this.user) {
       delete this.user.createdAt;
       delete this.user.updatedAt;
@@ -55,35 +53,35 @@ export class Order {
     return null;
   }
 
-  @Expose()
-  get products() {
-    if (this.items) {
-      return this.items
-        .filter((item) => !!item)
-        .map((item) => {
-          delete item.product.createdAt;
-          delete item.product.updatedAt;
-          delete item.product.deletedAt;
-          return {
-            ...item.product,
-            quantity: item.quantity,
-            itemId: item.id,
-          };
-        });
-    }
-    return [];
-  }
+  // @Expose()
+  // get products() {
+  //   if (this.items) {
+  //     return this.items
+  //       .filter((item) => !!item)
+  //       .map((item) => {
+  //         delete item.product.createdAt;
+  //         delete item.product.updatedAt;
+  //         delete item.product.deletedAt;
+  //         return {
+  //           ...item.product,
+  //           quantity: item.quantity,
+  //           itemId: item.id,
+  //         };
+  //       });
+  //   }
+  //   return [];
+  // }
 
-  @Expose()
-  get total() {
-    if (this.items) {
-      return this.items
-        .filter((item) => !!item)
-        .reduce((total, item) => {
-          const subTotal = item.quantity * item.product.price;
-          return total + subTotal;
-        }, 0);
-    }
-    return 0;
-  }
+  // @Expose()
+  // get total() {
+  //   if (this.items) {
+  //     return this.items
+  //       .filter((item) => !!item)
+  //       .reduce((total, item) => {
+  //         const subTotal = item.quantity * item.product.price;
+  //         return total + subTotal;
+  //       }, 0);
+  //   }
+  //   return 0;
+  // }
 }

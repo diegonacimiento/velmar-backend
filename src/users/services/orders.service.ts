@@ -16,14 +16,14 @@ export class OrdersService {
 
   async getAll() {
     return await this.orderRepository.find({
-      relations: ['user', 'items', 'items.product'],
+      relations: ['user'],
     });
   }
 
   async getOne(id: number) {
     const order = await this.orderRepository.findOne({
       where: { id },
-      relations: ['user', 'items', 'items.product'],
+      relations: ['user'],
     });
 
     if (!order) {
@@ -34,7 +34,7 @@ export class OrdersService {
   }
 
   async create(payload: CreateOrderDto) {
-    const newOrder = new Order();
+    const newOrder = this.orderRepository.create();
 
     if (payload.userId) {
       await addOneEntity(this.userRepository, payload.userId, newOrder);

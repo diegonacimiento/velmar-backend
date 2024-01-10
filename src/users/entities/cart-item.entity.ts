@@ -1,19 +1,17 @@
 import {
   Column,
   CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 
-import { Order } from './order.entity';
 import { Product } from '../../products/entities/product.entity';
+import { Cart } from './cart.entity';
 
-@Entity('items_order')
-export class ItemOrder {
+@Entity('cart_items')
+export class CartItem {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -27,19 +25,9 @@ export class ItemOrder {
   })
   createdAt: Date;
 
-  @UpdateDateColumn({
-    name: 'updated_at',
-    type: 'timestamptz',
-    default: null,
-  })
-  updatedAt: Date;
-
-  @DeleteDateColumn({ name: 'deleted_at', type: 'timestamptz', default: null })
-  deletedAt: Date;
-
-  @ManyToOne(() => Order, (order) => order.items)
-  @JoinColumn({ name: 'order_id' })
-  order: Order;
+  @ManyToOne(() => Cart, (cart) => cart.items)
+  @JoinColumn({ name: 'cart_id' })
+  cart: Cart;
 
   @ManyToOne(() => Product)
   @JoinColumn({ name: 'product_id' })
