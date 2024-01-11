@@ -28,6 +28,7 @@ import * as Joi from 'joi';
         POSTGRES_PORT: Joi.number().required(),
         DATABASE_URL: Joi.string().required(),
         JWT_SECRET: Joi.string().required(),
+        API_KEY: Joi.string().required(),
       }),
     }),
     AuthModule,

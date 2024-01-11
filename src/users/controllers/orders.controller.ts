@@ -18,6 +18,7 @@ import { RoleGuard } from 'src/auth/guards/role.guard';
 import { Role } from 'src/auth/decorators/role.decorator';
 import { ROLE } from 'src/auth/models/role.model';
 import { PayloadToken } from 'src/auth/models/token.model';
+import { ApiKeyGuard } from '../guards/api-key.guard';
 
 @ApiTags('orders')
 @UseGuards(JwtGuard, RoleGuard)
@@ -47,7 +48,8 @@ export class OrdersController {
     };
   }
 
-  @Role(ROLE.CUSTOMER)
+  @Role(ROLE.CUSTOMER, ROLE.SUPERADMIN)
+  @UseGuards(ApiKeyGuard)
   @Put(':id/sold-status')
   async update(@Param('id', MyParseIntPipe) id: number) {
     return {
