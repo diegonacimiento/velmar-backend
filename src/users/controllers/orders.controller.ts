@@ -51,10 +51,11 @@ export class OrdersController {
   @Role(ROLE.CUSTOMER, ROLE.SUPERADMIN)
   @UseGuards(ApiKeyGuard)
   @Put(':id/sold-status')
-  async update(@Param('id', MyParseIntPipe) id: number) {
+  async update(@Param('id', MyParseIntPipe) id: number, @Req() req: Request) {
+    const user = req.user as PayloadToken;
     return {
       message: 'Order updated',
-      order: await this.ordersService.update(id),
+      order: await this.ordersService.update(id, user.sub),
     };
   }
 

@@ -35,4 +35,12 @@ export class CartItemsController {
       cartItem: await this.cartItemsService.delete(id),
     };
   }
+
+  @Delete()
+  async deleteByCart(@Param('cartId', MyParseIntPipe) cartId: number) {
+    return {
+      message: 'Items deleted of cart',
+      cartItem: await this.cartItemsService.deleteByCart(cartId),
+    };
+  }
 }

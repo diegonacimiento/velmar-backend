@@ -54,4 +54,14 @@ export class CartItemsService {
 
     return cartItem;
   }
+
+  async deleteByCart(cartId: number) {
+    const cartItems = await this.cartItemRepository.find({
+      where: { cart: { id: cartId } },
+    });
+
+    await this.cartItemRepository.delete({ cart: { id: cartId } });
+
+    return cartItems;
+  }
 }

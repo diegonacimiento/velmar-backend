@@ -1,25 +1,41 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { CartsService } from '../services/carts.service';
 import { MyParseIntPipe } from 'src/common/my-parse-int/my-parse-int.pipe';
+import { JwtGuard } from 'src/auth/guards/jwt.guard';
+import { RoleGuard } from 'src/auth/guards/role.guard';
+import { Role } from 'src/auth/decorators/role.decorator';
+import { ROLE } from 'src/auth/models/role.model';
 import { CreateCartDto } from '../dtos/cart.dto';
 
 @ApiTags('carts')
+@UseGuards(JwtGuard, RoleGuard)
 @Controller('carts')
 export class CartsController {
   constructor(private cartsService: CartsService) {}
 
+  @Role(ROLE.SUPERADMIN)
   @Get()
   async getAll() {
     return await this.cartsService.getAll();
   }
 
+  @Role(ROLE.SUPERADMIN)
   @Get(':id')
   async getOne(@Param('id', MyParseIntPipe) id: number) {
     return await this.cartsService.getOne(id);
   }
 
+  @Role(ROLE.SUPERADMIN)
   @Post()
   async create(@Body() payload: CreateCartDto) {
     return {
@@ -28,6 +44,7 @@ export class CartsController {
     };
   }
 
+  @Role(ROLE.SUPERADMIN)
   @Delete(':id')
   async delete(@Param('id', MyParseIntPipe) id: number) {
     return {

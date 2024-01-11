@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -12,6 +16,7 @@ import {
 import { User } from '../entities/user.entity';
 import { Cart } from '../entities/cart.entity';
 import { ORDER_STATUS } from '../model/order-status.model';
+import { CartItem } from '../entities/cart-item.entity';
 
 @Injectable()
 export class OrdersService {
@@ -19,6 +24,8 @@ export class OrdersService {
     @InjectRepository(Order) private orderRepository: Repository<Order>,
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(Cart) private cartRepository: Repository<Cart>,
+    @InjectRepository(CartItem)
+    private cartItemRepository: Repository<CartItem>,
   ) {}
 
   async getAll() {
@@ -51,9 +58,25 @@ export class OrdersService {
     return await this.orderRepository.save(newOrder);
   }
 
-  async update(id: number) {
-    const order = await this.getOne(id);
+  async update(id: number, userId: number) {
+    const order = await this.orderRepository.findOne({
+      where: { user: { id: userId }, id },
+    });
+    if (!order) {
+      throw new NotFoundException('Order not found');
+    }
     order.status = ORDER_STATUS.SOLD;
+    if (order.status === ORDER_STATUS.SOLD) {
+      const cart = await this.cartRepository.findOne({
+        where: { user: { id: userId } },
+      });
+      const cartItemDeleted = await this.cartItemRepository.delete({
+        cart: { id: cart.id },
+      });
+      if (!cart || !cartItemDeleted) {
+        throw new InternalServerErrorException('An unexpected error occurred');
+      }
+    }
     return await this.orderRepository.save(order);
   }
 

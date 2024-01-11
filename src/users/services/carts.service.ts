@@ -20,7 +20,23 @@ export class CartsService {
   }
 
   async getOne(id: number) {
-    const cart = await this.cartRepository.findOne({ where: { id } });
+    const cart = await this.cartRepository.findOne({
+      where: { id },
+      relations: ['user', 'items', 'items.product'],
+    });
+
+    if (!cart) {
+      throw new NotFoundException('Cart not found');
+    }
+
+    return cart;
+  }
+
+  async getOneByUser(userId: number) {
+    const cart = await this.cartRepository.findOne({
+      where: { user: { id: userId } },
+      relations: ['user', 'items', 'items.product'],
+    });
 
     if (!cart) {
       throw new NotFoundException('Cart not found');
@@ -41,9 +57,7 @@ export class CartsService {
 
   async delete(id: number) {
     const cart = await this.getOne(id);
-
     await this.cartRepository.delete(id);
-
     return cart;
   }
 }
