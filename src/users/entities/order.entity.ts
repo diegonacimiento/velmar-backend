@@ -40,7 +40,15 @@ export class Order {
   user: User;
 
   @Column('simple-json', { nullable: true })
-  products: Array<{ productId: number; quantity: number; price: number }>;
+  products: Array<{
+    productId: number;
+    name: string;
+    quantity: number;
+    price: number;
+  }>;
+
+  @Column({ type: 'varchar', default: 'in-progress' })
+  status: string;
 
   @Expose()
   get user_details() {

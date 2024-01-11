@@ -96,3 +96,27 @@ export const changeEntityRelated = async (
 
   entity[repository.metadata.name.toLowerCase()] = entityRelated;
 };
+
+export const addCartInOrder = async (
+  cartRepository: any,
+  userId: number,
+  newOrder: any,
+) => {
+  const cart = await cartRepository.findOne({
+    where: { user: { id: userId } },
+    relations: ['items', 'items.product'],
+  });
+
+  if (!cart) {
+    throw new BadRequestException('The cart is empty');
+  }
+
+  newOrder.products = cart.items.map((item) => {
+    return {
+      productId: item.product.id,
+      name: item.product.name,
+      price: item.product.price,
+      quantity: item.quantity,
+    };
+  });
+};

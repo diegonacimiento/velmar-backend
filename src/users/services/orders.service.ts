@@ -3,15 +3,22 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Order } from '../entities/order.entity';
-import { CreateOrderDto, UpdateOrderDto } from '../dtos/order.dto';
-import { addOneEntity, changeEntityRelated } from 'src/utils/shared-functions';
+import { CreateOrderDto } from '../dtos/order.dto';
+import {
+  addCartInOrder,
+  addOneEntity,
+  changeEntityRelated,
+} from 'src/utils/shared-functions';
 import { User } from '../entities/user.entity';
+import { Cart } from '../entities/cart.entity';
+import { ORDER_STATUS } from '../model/order-status.model';
 
 @Injectable()
 export class OrdersService {
   constructor(
     @InjectRepository(Order) private orderRepository: Repository<Order>,
     @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(Cart) private cartRepository: Repository<Cart>,
   ) {}
 
   async getAll() {
@@ -38,14 +45,15 @@ export class OrdersService {
 
     if (payload.userId) {
       await addOneEntity(this.userRepository, payload.userId, newOrder);
+      await addCartInOrder(this.cartRepository, payload.userId, newOrder);
     }
 
     return await this.orderRepository.save(newOrder);
   }
 
-  async update(id: number, payload: UpdateOrderDto) {
+  async update(id: number) {
     const order = await this.getOne(id);
-    await addOneEntity(this.userRepository, payload.userId, order);
+    order.status = ORDER_STATUS.SOLD;
     return await this.orderRepository.save(order);
   }
 

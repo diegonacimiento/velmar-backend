@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   Delete,
   Get,
@@ -14,7 +13,6 @@ import { Request } from 'express';
 
 import { OrdersService } from '../services/orders.service';
 import { MyParseIntPipe } from 'src/common/my-parse-int/my-parse-int.pipe';
-import { UpdateOrderDto } from '../dtos/order.dto';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { RoleGuard } from 'src/auth/guards/role.guard';
 import { Role } from 'src/auth/decorators/role.decorator';
@@ -49,15 +47,12 @@ export class OrdersController {
     };
   }
 
-  @Role(ROLE.SUPERADMIN)
-  @Put(':id')
-  async update(
-    @Param('id', MyParseIntPipe) id: number,
-    @Body() payload: UpdateOrderDto,
-  ) {
+  @Role(ROLE.CUSTOMER)
+  @Put(':id/sold-status')
+  async update(@Param('id', MyParseIntPipe) id: number) {
     return {
       message: 'Order updated',
-      order: await this.ordersService.update(id, payload),
+      order: await this.ordersService.update(id),
     };
   }
 
