@@ -8,9 +8,8 @@ export class CreateCartItemDto {
   readonly quantity: number;
 
   @ApiProperty()
-  @IsNotEmpty()
   @IsPositive()
-  readonly cartId: number;
+  readonly userId: number;
 
   @ApiProperty()
   @IsNotEmpty()

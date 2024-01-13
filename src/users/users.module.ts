@@ -8,7 +8,6 @@ import { UsersService } from './services/users.service';
 import { Order } from './entities/order.entity';
 import { User } from './entities/user.entity';
 import { Product } from 'src/products/entities/product.entity';
-import { ProfileController } from './controllers/profile.controller';
 import { CartsController } from './controllers/carts.controller';
 import { CartItemsController } from './controllers/cart-items.controller';
 import { CartItemsService } from './services/cart-items.service';
@@ -21,7 +20,6 @@ import { CartItem } from './entities/cart-item.entity';
   controllers: [
     OrdersController,
     UsersController,
-    ProfileController,
     CartsController,
     CartItemsController,
   ],

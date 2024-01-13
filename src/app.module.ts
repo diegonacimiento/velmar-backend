@@ -29,6 +29,7 @@ import * as Joi from 'joi';
         DATABASE_URL: Joi.string().required(),
         JWT_SECRET: Joi.string().required(),
         API_KEY: Joi.string().required(),
+        API_SECRET: Joi.string().required(),
       }),
     }),
     AuthModule,

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Cart } from '../entities/cart.entity';
 import { Repository } from 'typeorm';
@@ -46,6 +50,12 @@ export class CartsService {
   }
 
   async create(payload: CreateCartDto) {
+    const cart = await this.getOneByUser(payload.userId);
+
+    if (cart) {
+      throw new BadRequestException('A cart already exists for the user');
+    }
+
     const newCart = new Cart();
 
     if (payload.userId) {

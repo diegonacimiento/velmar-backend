@@ -37,8 +37,8 @@ export class CreateUserDto {
 
   @IsString()
   @IsNotEmpty()
-  @IsIn([ROLE.CUSTOMER, ROLE.ADMIN], {
-    message: 'Role must be "customer" or "admin"',
+  @IsIn([ROLE.CUSTOMER, ROLE.SALESPERSON], {
+    message: 'Role must be "customer" or "salesperson"',
   })
   readonly role: string;
 

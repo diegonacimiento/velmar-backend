@@ -11,5 +11,6 @@ export default registerAs('config', () => {
     },
     jwtSecret: process.env.JWT_SECRET,
     apiKey: process.env.API_KEY,
+    apiSecret: process.env.API_SECRET,
   };
 });
