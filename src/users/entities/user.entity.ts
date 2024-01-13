@@ -7,9 +7,11 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
   OneToMany,
+  OneToOne,
 } from 'typeorm';
 
 import { Order } from './order.entity';
+import { Cart } from './cart.entity';
 
 @Entity('users')
 export class User {
@@ -57,4 +59,7 @@ export class User {
 
   @OneToMany(() => Order, (order) => order.user)
   orders: Order[];
+
+  @OneToOne(() => Cart, (cart) => cart.user, { cascade: true })
+  cart: Cart;
 }

@@ -1,10 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsPositive } from 'class-validator';
+import { IsEnum, IsOptional, IsPositive } from 'class-validator';
 import { ORDER_STATUS } from '../model/order-status.model';
 
 export class CreateOrderDto {
   @ApiProperty()
   @IsPositive()
+  @IsOptional()
   readonly userId: number;
 }
 

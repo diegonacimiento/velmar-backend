@@ -1,5 +1,5 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { IsNotEmpty, IsPositive } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsPositive } from 'class-validator';
 
 export class CreateCartItemDto {
   @ApiProperty()
@@ -9,6 +9,7 @@ export class CreateCartItemDto {
 
   @ApiProperty()
   @IsPositive()
+  @IsOptional()
   readonly userId: number;
 
   @ApiProperty()

@@ -78,14 +78,12 @@ export class UsersController {
     };
   }
 
-  @Role(ROLE.SUPERADMIN, ROLE.SALESPERSON, ROLE.CUSTOMER)
+  @Role(ROLE.SUPERADMIN)
   @Delete(':id')
-  async delete(@Param('id', MyParseIntPipe) id: number, @Req() req: Request) {
-    const user = req.user as PayloadToken;
-    const userId = user.role === ROLE.SUPERADMIN ? id : user.sub;
+  async delete(@Param('id', MyParseIntPipe) id: number) {
     return {
       message: 'User deleted',
-      user: await this.usersService.delete(userId),
+      user: await this.usersService.delete(id),
     };
   }
 

@@ -22,7 +22,7 @@ export class Cart {
   })
   createdAt: Date;
 
-  @OneToOne(() => User, (user) => user.orders)
+  @OneToOne(() => User, (user) => user.cart)
   @JoinColumn({ name: 'user_id' })
   user: User;
 

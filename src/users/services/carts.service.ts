@@ -50,7 +50,9 @@ export class CartsService {
   }
 
   async create(payload: CreateCartDto) {
-    const cart = await this.getOneByUser(payload.userId);
+    const cart = await this.cartRepository.findOne({
+      where: { user: { id: payload.userId } },
+    });
 
     if (cart) {
       throw new BadRequestException('A cart already exists for the user');
