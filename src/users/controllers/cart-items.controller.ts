@@ -76,10 +76,10 @@ export class CartItemsController {
   }
 
   @Role(ROLE.SUPERADMIN, ROLE.CUSTOMER)
-  @Delete(':id/:userId')
+  @Delete(':id')
   async delete(
     @Param('id', MyParseIntPipe) id: number,
-    @Param('userId', MyParseIntPipe) userId: number,
+    @Body('userId') userId: number,
     @Req() req: Request,
   ) {
     const user = req.user as PayloadToken;
@@ -94,11 +94,8 @@ export class CartItemsController {
   }
 
   @Role(ROLE.SUPERADMIN, ROLE.CUSTOMER)
-  @Delete('delete-all/:userId')
-  async deleteAll(
-    @Param('userId', MyParseIntPipe) userId: number,
-    @Req() req: Request,
-  ) {
+  @Delete('delete-all')
+  async deleteAll(@Body('userId') userId: number, @Req() req: Request) {
     const user = req.user as PayloadToken;
     const id = user.role === ROLE.CUSTOMER ? user.sub : userId;
     return {

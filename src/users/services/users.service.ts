@@ -19,7 +19,7 @@ export class UsersService {
   async getOne(id: number) {
     const user = await this.userRepository.findOne({
       where: { id },
-      relations: ['orders'],
+      relations: { orders: true },
     });
 
     if (!user) {

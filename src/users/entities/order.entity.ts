@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 
 import { User } from './user.entity';
-import { Exclude, Expose } from 'class-transformer';
+// import { Exclude, Expose } from 'class-transformer';
 
 @Entity('orders')
 export class Order {
@@ -34,8 +34,7 @@ export class Order {
   @DeleteDateColumn({ name: 'deleted_at', type: 'timestamptz', default: null })
   deletedAt: Date;
 
-  @Exclude()
-  @ManyToOne(() => User, (user) => user.orders)
+  @ManyToOne(() => User, (user) => user.orders, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: User;
 
@@ -45,21 +44,11 @@ export class Order {
     name: string;
     quantity: number;
     price: number;
+    brand: { id: number; name: string };
   }>;
 
   @Column({ type: 'varchar', default: 'in-progress' })
   status: string;
-
-  @Expose()
-  get user_details() {
-    if (this.user) {
-      delete this.user.createdAt;
-      delete this.user.updatedAt;
-      delete this.user.deletedAt;
-      return this.user;
-    }
-    return null;
-  }
 
   // @Expose()
   // get products() {

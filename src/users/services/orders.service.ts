@@ -7,7 +7,7 @@ import { CreateOrderDto, UpdateOrderDto } from '../dtos/order.dto';
 import { addCartInOrder, addOneEntity } from 'src/utils/shared-functions';
 import { User } from '../entities/user.entity';
 import { Cart } from '../entities/cart.entity';
-import { ORDER_STATUS } from '../model/order-status.model';
+import { relationsOrder, selectOrder } from 'src/utils/select-relations';
 
 @Injectable()
 export class OrdersService {
@@ -17,17 +17,18 @@ export class OrdersService {
     @InjectRepository(Cart) private cartRepository: Repository<Cart>,
   ) {}
 
-  // GET
   async getAll() {
     return await this.orderRepository.find({
-      relations: ['user'],
+      relations: relationsOrder,
+      select: selectOrder,
     });
   }
 
   async getOne(id: number) {
     const order = await this.orderRepository.findOne({
       where: { id },
-      relations: ['user', 'items', 'items.product'],
+      relations: relationsOrder,
+      select: selectOrder,
     });
 
     if (!order) {
@@ -40,12 +41,12 @@ export class OrdersService {
   async getAllByUser(userId: number) {
     const orders = await this.orderRepository.find({
       where: { user: { id: userId } },
-      relations: ['user', 'items', 'items.product'],
+      relations: relationsOrder,
+      select: selectOrder,
     });
     return orders;
   }
 
-  // POST
   async create(payload: CreateOrderDto) {
     const newOrder = this.orderRepository.create();
 
@@ -57,32 +58,18 @@ export class OrdersService {
     return await this.orderRepository.save(newOrder);
   }
 
-  // UPDATE
   async update(id: number, payload: UpdateOrderDto) {
     const order = await this.getOne(id);
+    if (!order || order.user.id !== payload.userId) {
+      throw new NotFoundException('Order not found');
+    }
     this.orderRepository.merge(order, payload);
     return await this.orderRepository.save(order);
   }
 
-  async soldStatus(id: number, userId: number) {
-    const order = await this.orderRepository.findOne({
-      where: { user: { id: userId }, id },
-    });
-    if (!order) {
-      throw new NotFoundException('Order not found');
-    }
-    if (order.status === ORDER_STATUS.IN_PROGRESS) {
-      order.status = ORDER_STATUS.SOLD;
-    }
-    return await this.orderRepository.save(order);
-  }
-
-  // DELETE
   async delete({ id, userId }: { id: number; userId: number }) {
-    const order = await this.orderRepository.findOne({
-      where: { user: { id: userId }, id },
-    });
-    if (!order) {
+    const order = await this.getOne(id);
+    if (!order || order.user.id !== userId) {
       throw new NotFoundException('Order not found');
     }
     await this.orderRepository.delete(id);

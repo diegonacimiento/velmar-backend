@@ -104,7 +104,7 @@ export const addCartInOrder = async (
 ) => {
   const cart = await cartRepository.findOne({
     where: { user: { id: userId } },
-    relations: ['items', 'items.product'],
+    relations: { items: { product: { brand: true } } },
   });
 
   if (!cart) {
@@ -117,6 +117,7 @@ export const addCartInOrder = async (
       name: item.product.name,
       price: item.product.price,
       quantity: item.quantity,
+      brand: { id: item.product.brand.id, name: item.product.brand.name },
     };
   });
 };

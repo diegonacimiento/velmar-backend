@@ -1,11 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CartItem } from '../entities/cart-item.entity';
 import { Repository } from 'typeorm';
+
+import { CartItem } from '../entities/cart-item.entity';
 import { CreateCartItemDto } from '../dtos/cart-item.dto';
 import { addOneEntity } from 'src/utils/shared-functions';
 import { Cart } from '../entities/cart.entity';
 import { Product } from 'src/products/entities/product.entity';
+import { relationsCartItem, selectCartItem } from 'src/utils/select-relations';
 
 @Injectable()
 export class CartItemsService {
@@ -19,13 +21,17 @@ export class CartItemsService {
   ) {}
 
   async getAll() {
-    return await this.cartItemRepository.find({ relations: ['cart'] });
+    return await this.cartItemRepository.find({
+      relations: { cart: { user: true } },
+      select: { cart: { id: true, user: { id: true, username: true } } },
+    });
   }
 
   async getOne(id: number) {
     const cartItem = await this.cartItemRepository.findOne({
       where: { id },
-      relations: ['cart'],
+      relations: relationsCartItem,
+      select: selectCartItem,
     });
 
     if (!cartItem) {
@@ -36,11 +42,9 @@ export class CartItemsService {
   }
 
   async getOneWithUser(id: number, userId: number) {
-    const cartItem = await this.cartItemRepository.findOne({
-      where: { cart: { user: { id: userId } }, id },
-    });
+    const cartItem = await this.getOne(id);
 
-    if (!cartItem) {
+    if (!cartItem || cartItem.cart.user.id !== userId) {
       throw new NotFoundException('Cart item not found');
     }
     return cartItem;
@@ -52,6 +56,8 @@ export class CartItemsService {
         cart: { user: { id: payload.userId } },
         product: { id: payload.productId },
       },
+      relations: relationsCartItem,
+      select: selectCartItem,
     });
 
     if (cartItem) {
@@ -63,6 +69,8 @@ export class CartItemsService {
 
     const cart = await this.cartRepository.findOne({
       where: { user: { id: payload.userId } },
+      relations: { user: true },
+      select: { id: true, user: { id: true, username: true } },
     });
 
     if (!cart) {
@@ -92,6 +100,8 @@ export class CartItemsService {
   async deleteAll(userId: number) {
     const cartItems = await this.cartItemRepository.find({
       where: { cart: { user: { id: userId } } },
+      relations: relationsCartItem,
+      select: selectCartItem,
     });
 
     if (!cartItems) {

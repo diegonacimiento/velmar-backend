@@ -59,7 +59,7 @@ export class OrdersController {
 
   @UseGuards(ApiSecretGuard)
   @Role(ROLE.SUPERADMIN, ROLE.CUSTOMER)
-  @Put(':id/userId')
+  @Put(':id')
   async update(
     @Param('id', MyParseIntPipe) id: number,
     @Body() payload: UpdateOrderDto,
@@ -78,10 +78,10 @@ export class OrdersController {
 
   @UseGuards(ApiSecretGuard)
   @Role(ROLE.SUPERADMIN, ROLE.CUSTOMER)
-  @Delete(':id/:userId')
+  @Delete(':id')
   async delete(
     @Param('id', MyParseIntPipe) id: number,
-    @Param('userId', MyParseIntPipe) userId: number,
+    @Body('userId') userId: number,
     @Req() req: Request,
   ) {
     const user = req.user as PayloadToken;
