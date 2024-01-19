@@ -6,12 +6,11 @@ import {
   DeleteDateColumn,
   JoinColumn,
   ManyToOne,
-  OneToMany,
+  Column,
 } from 'typeorm';
 
 import { User } from './user.entity';
-import { ItemOrder } from './item-order.entity';
-import { Exclude, Expose } from 'class-transformer';
+// import { Exclude, Expose } from 'class-transformer';
 
 @Entity('orders')
 export class Order {
@@ -35,55 +34,51 @@ export class Order {
   @DeleteDateColumn({ name: 'deleted_at', type: 'timestamptz', default: null })
   deletedAt: Date;
 
-  @Exclude()
   @ManyToOne(() => User, (user) => user.orders, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @Exclude()
-  @OneToMany(() => ItemOrder, (item) => item.order)
-  items: ItemOrder[];
+  @Column('simple-json', { nullable: true })
+  products: Array<{
+    productId: number;
+    name: string;
+    quantity: number;
+    price: number;
+    brand: { id: number; name: string };
+  }>;
 
-  @Expose()
-  get userDetails() {
-    if (this.user) {
-      delete this.user.createdAt;
-      delete this.user.updatedAt;
-      delete this.user.deletedAt;
-      return this.user;
-    }
-    return null;
-  }
+  @Column({ type: 'varchar', default: 'in-progress' })
+  status: string;
 
-  @Expose()
-  get products() {
-    if (this.items) {
-      return this.items
-        .filter((item) => !!item)
-        .map((item) => {
-          delete item.product.createdAt;
-          delete item.product.updatedAt;
-          delete item.product.deletedAt;
-          return {
-            ...item.product,
-            quantity: item.quantity,
-            itemId: item.id,
-          };
-        });
-    }
-    return [];
-  }
+  // @Expose()
+  // get products() {
+  //   if (this.items) {
+  //     return this.items
+  //       .filter((item) => !!item)
+  //       .map((item) => {
+  //         delete item.product.createdAt;
+  //         delete item.product.updatedAt;
+  //         delete item.product.deletedAt;
+  //         return {
+  //           ...item.product,
+  //           quantity: item.quantity,
+  //           itemId: item.id,
+  //         };
+  //       });
+  //   }
+  //   return [];
+  // }
 
-  @Expose()
-  get total() {
-    if (this.items) {
-      return this.items
-        .filter((item) => !!item)
-        .reduce((total, item) => {
-          const subTotal = item.quantity * item.product.price;
-          return total + subTotal;
-        }, 0);
-    }
-    return 0;
-  }
+  // @Expose()
+  // get total() {
+  //   if (this.items) {
+  //     return this.items
+  //       .filter((item) => !!item)
+  //       .reduce((total, item) => {
+  //         const subTotal = item.quantity * item.product.price;
+  //         return total + subTotal;
+  //       }, 0);
+  //   }
+  //   return 0;
+  // }
 }

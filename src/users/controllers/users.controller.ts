@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -18,6 +19,8 @@ import { RoleGuard } from 'src/auth/guards/role.guard';
 import { Role } from 'src/auth/decorators/role.decorator';
 import { ROLE } from 'src/auth/models/role.model';
 import { Public } from 'src/auth/decorators/public.decorator';
+import { Request } from 'express';
+import { PayloadToken } from 'src/auth/models/token.model';
 
 @ApiTags('users')
 @UseGuards(JwtGuard, RoleGuard)
@@ -29,6 +32,13 @@ export class UsersController {
   @Get()
   async getAll() {
     return await this.usersService.getAll();
+  }
+
+  @Role(ROLE.SUPERADMIN, ROLE.SALESPERSON, ROLE.CUSTOMER)
+  @Get('profile')
+  async getMyUser(@Req() req: Request) {
+    const user = req.user as PayloadToken;
+    return await this.usersService.getOne(user.sub);
   }
 
   @Role(ROLE.SUPERADMIN)
@@ -58,12 +68,32 @@ export class UsersController {
     };
   }
 
+  @Role(ROLE.SUPERADMIN, ROLE.SALESPERSON, ROLE.CUSTOMER)
+  @Put()
+  async updateMyUser(@Body() payload: UpdateUserDto, @Req() req: Request) {
+    const user = req.user as PayloadToken;
+    return {
+      message: 'User updated',
+      user: await this.usersService.update(user.sub, payload),
+    };
+  }
+
   @Role(ROLE.SUPERADMIN)
   @Delete(':id')
   async delete(@Param('id', MyParseIntPipe) id: number) {
     return {
       message: 'User deleted',
       user: await this.usersService.delete(id),
+    };
+  }
+
+  @Role(ROLE.SUPERADMIN, ROLE.SALESPERSON, ROLE.CUSTOMER)
+  @Delete()
+  async deleteMyUser(@Req() req: Request) {
+    const user = req.user as PayloadToken;
+    return {
+      message: 'User deleted',
+      user: await this.usersService.delete(user.sub),
     };
   }
 }

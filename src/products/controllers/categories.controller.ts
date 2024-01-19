@@ -37,7 +37,7 @@ export class CategoriesController {
     return await this.categoriesService.getOne(id);
   }
 
-  @Role(ROLE.ADMIN, ROLE.SUPERADMIN)
+  @Role(ROLE.SALESPERSON, ROLE.SUPERADMIN)
   @Post()
   async create(@Body() payload: CreateCategoryDto) {
     return {
@@ -46,7 +46,7 @@ export class CategoriesController {
     };
   }
 
-  @Role(ROLE.ADMIN, ROLE.SUPERADMIN)
+  @Role(ROLE.SALESPERSON, ROLE.SUPERADMIN)
   @Put(':id')
   async update(
     @Param('id', MyParseIntPipe) id: number,
@@ -58,7 +58,7 @@ export class CategoriesController {
     };
   }
 
-  @Role(ROLE.ADMIN, ROLE.SUPERADMIN)
+  @Role(ROLE.SALESPERSON, ROLE.SUPERADMIN)
   @Delete(':id')
   async delete(@Param('id', MyParseIntPipe) id: number) {
     return {

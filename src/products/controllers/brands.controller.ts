@@ -37,7 +37,7 @@ export class BrandsController {
     return await this.brandsService.getOne(id);
   }
 
-  @Role(ROLE.ADMIN, ROLE.SUPERADMIN)
+  @Role(ROLE.SALESPERSON, ROLE.SUPERADMIN)
   @Post()
   async create(@Body() payload: CreateBrandDto) {
     return {
@@ -46,7 +46,7 @@ export class BrandsController {
     };
   }
 
-  @Role(ROLE.ADMIN, ROLE.SUPERADMIN)
+  @Role(ROLE.SALESPERSON, ROLE.SUPERADMIN)
   @Put(':id')
   async update(
     @Param('id', MyParseIntPipe) id: number,
@@ -58,7 +58,7 @@ export class BrandsController {
     };
   }
 
-  @Role(ROLE.ADMIN, ROLE.SUPERADMIN)
+  @Role(ROLE.SALESPERSON, ROLE.SUPERADMIN)
   @Delete(':id')
   async delete(@Param('id', MyParseIntPipe) id: number) {
     return {
@@ -67,7 +67,7 @@ export class BrandsController {
     };
   }
 
-  @Role(ROLE.ADMIN, ROLE.SUPERADMIN)
+  @Role(ROLE.SALESPERSON, ROLE.SUPERADMIN)
   @Put(':id/category/:categoryId')
   async addCategory(
     @Param('id', MyParseIntPipe) id: number,
@@ -79,7 +79,7 @@ export class BrandsController {
     };
   }
 
-  @Role(ROLE.ADMIN, ROLE.SUPERADMIN)
+  @Role(ROLE.SALESPERSON, ROLE.SUPERADMIN)
   @Delete(':id/category/:categoryId')
   async removeCategory(
     @Param('id', MyParseIntPipe) id: number,

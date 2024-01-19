@@ -3,9 +3,11 @@ import {
   ArrayNotEmpty,
   IsArray,
   IsNotEmpty,
+  IsOptional,
   IsPositive,
   IsString,
   IsUrl,
+  Min,
 } from 'class-validator';
 
 export class CreateProductDto {
@@ -41,3 +43,15 @@ export class CreateProductDto {
 }
 
 export class UpdateProductDto extends PartialType(CreateProductDto) {}
+
+export class FilterProductDto {
+  @ApiProperty()
+  @IsOptional()
+  @IsPositive()
+  limit: number;
+
+  @ApiProperty()
+  @IsOptional()
+  @Min(0)
+  offset: number;
+}

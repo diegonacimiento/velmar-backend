@@ -7,12 +7,17 @@ import {
   Post,
   Put,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { ProductsService } from '../services/products.service';
 import { MyParseIntPipe } from 'src/common/my-parse-int/my-parse-int.pipe';
-import { CreateProductDto, UpdateProductDto } from '../dtos/product.dto';
+import {
+  CreateProductDto,
+  FilterProductDto,
+  UpdateProductDto,
+} from '../dtos/product.dto';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { Public } from 'src/auth/decorators/public.decorator';
 import { RoleGuard } from 'src/auth/guards/role.guard';
@@ -27,8 +32,8 @@ export class ProductsController {
 
   @Public()
   @Get()
-  async getAll() {
-    return await this.productsService.getAll();
+  async getAll(@Query() params: FilterProductDto) {
+    return await this.productsService.getAll(params);
   }
 
   @Public()
@@ -37,7 +42,7 @@ export class ProductsController {
     return await this.productsService.getOne(id);
   }
 
-  @Role(ROLE.ADMIN, ROLE.SUPERADMIN)
+  @Role(ROLE.SALESPERSON, ROLE.SUPERADMIN)
   @Post()
   async create(@Body() payload: CreateProductDto) {
     return {
@@ -46,7 +51,7 @@ export class ProductsController {
     };
   }
 
-  @Role(ROLE.ADMIN, ROLE.SUPERADMIN)
+  @Role(ROLE.SALESPERSON, ROLE.SUPERADMIN)
   @Put(':id')
   async update(
     @Param('id', MyParseIntPipe) id: number,
@@ -58,7 +63,7 @@ export class ProductsController {
     };
   }
 
-  @Role(ROLE.ADMIN, ROLE.SUPERADMIN)
+  @Role(ROLE.SALESPERSON, ROLE.SUPERADMIN)
   @Delete(':id')
   async delete(@Param('id', MyParseIntPipe) id: number) {
     return {
@@ -67,7 +72,7 @@ export class ProductsController {
     };
   }
 
-  @Role(ROLE.ADMIN, ROLE.SUPERADMIN)
+  @Role(ROLE.SALESPERSON, ROLE.SUPERADMIN)
   @Put(':id/category/:categoryId')
   async addCategory(
     @Param('id', MyParseIntPipe) id: number,
@@ -79,7 +84,7 @@ export class ProductsController {
     };
   }
 
-  @Role(ROLE.ADMIN, ROLE.SUPERADMIN)
+  @Role(ROLE.SALESPERSON, ROLE.SUPERADMIN)
   @Delete(':id/category/:categoryId')
   async removeCategory(
     @Param('id', MyParseIntPipe) id: number,
@@ -91,7 +96,7 @@ export class ProductsController {
     };
   }
 
-  @Role(ROLE.ADMIN, ROLE.SUPERADMIN)
+  @Role(ROLE.SALESPERSON, ROLE.SUPERADMIN)
   @Put(':id/brand/:brandId')
   async changeBrand(
     @Param('id', MyParseIntPipe) id: number,

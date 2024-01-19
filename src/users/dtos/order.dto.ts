@@ -1,11 +1,16 @@
-import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { IsNotEmpty, IsPositive } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsEnum, IsOptional, IsPositive } from 'class-validator';
+import { ORDER_STATUS } from '../model/order-status.model';
 
 export class CreateOrderDto {
   @ApiProperty()
   @IsPositive()
-  @IsNotEmpty()
+  @IsOptional()
   readonly userId: number;
 }
 
-export class UpdateOrderDto extends PartialType(CreateOrderDto) {}
+export class UpdateOrderDto extends CreateOrderDto {
+  @ApiProperty()
+  @IsEnum(ORDER_STATUS, { message: 'Status must be "in progress" or "sold"' })
+  readonly status: string;
+}
