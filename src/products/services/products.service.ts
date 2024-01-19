@@ -3,7 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Product } from '../entities/product.entity';
-import { CreateProductDto, UpdateProductDto } from '../dtos/product.dto';
+import {
+  CreateProductDto,
+  FilterProductDto,
+  UpdateProductDto,
+} from '../dtos/product.dto';
 import { Brand } from '../entities/brand.entity';
 import { Category } from '../entities/category.entity';
 import {
@@ -23,8 +27,13 @@ export class ProductsService {
     private categoryRepository: Repository<Category>,
   ) {}
 
-  async getAll() {
-    return await this.productRepository.find();
+  async getAll(params: FilterProductDto) {
+    const { limit = 5, offset = 0 } = params;
+    return await this.productRepository.find({
+      relations: { brand: true },
+      skip: offset,
+      take: limit,
+    });
   }
 
   async getOne(id: number) {

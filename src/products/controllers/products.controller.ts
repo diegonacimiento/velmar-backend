@@ -7,12 +7,17 @@ import {
   Post,
   Put,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { ProductsService } from '../services/products.service';
 import { MyParseIntPipe } from 'src/common/my-parse-int/my-parse-int.pipe';
-import { CreateProductDto, UpdateProductDto } from '../dtos/product.dto';
+import {
+  CreateProductDto,
+  FilterProductDto,
+  UpdateProductDto,
+} from '../dtos/product.dto';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { Public } from 'src/auth/decorators/public.decorator';
 import { RoleGuard } from 'src/auth/guards/role.guard';
@@ -27,8 +32,8 @@ export class ProductsController {
 
   @Public()
   @Get()
-  async getAll() {
-    return await this.productsService.getAll();
+  async getAll(@Query() params: FilterProductDto) {
+    return await this.productsService.getAll(params);
   }
 
   @Public()
