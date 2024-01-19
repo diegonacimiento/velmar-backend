@@ -10,7 +10,10 @@ export default registerAs('config', () => {
       port: parseInt(process.env.POSTGRES_PORT),
     },
     jwtSecret: process.env.JWT_SECRET,
+    jwtSecretRecovery: process.env.JWT_SECRET_RECOVERY,
     apiKey: process.env.API_KEY,
     apiSecret: process.env.API_SECRET,
+    ggEmail: process.env.GG_EMAIL,
+    ggKey: process.env.GG_KEY,
   };
 });
