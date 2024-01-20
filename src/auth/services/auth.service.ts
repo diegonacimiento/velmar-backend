@@ -11,7 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 
 import { User } from 'src/users/entities/user.entity';
 import { PayloadToken } from '../models/token.model';
-import { sendEmail } from 'src/api/nodemailer';
+import { sendEmail } from 'src/utils/nodemailer';
 import config from 'src/config';
 import { ConfigType } from '@nestjs/config';
 import {
