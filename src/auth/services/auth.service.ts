@@ -11,7 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 
 import { User } from 'src/users/entities/user.entity';
 import { PayloadToken } from '../models/token.model';
-import { sendEmail } from 'src/utils/nodemailer';
+import { sendEmail } from 'src/api/nodemailer';
 import config from 'src/config';
 import { ConfigType } from '@nestjs/config';
 import {
@@ -70,8 +70,8 @@ export class AuthService {
 
       await this.userRepository.save(user);
 
-      await sendEmail(email, link);
-      return { message: 'Email enviado' };
+      await sendEmail({ email, link, user: user.fullname });
+      return { message: 'Email sent' };
     } catch (error) {
       console.log(error);
       throw error;
