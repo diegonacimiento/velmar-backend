@@ -40,6 +40,9 @@ export class User {
   @Column({ type: 'varchar', length: 255, default: null })
   adress: string;
 
+  @Column({ type: 'varchar', length: 555, default: null })
+  recoveryToken: string;
+
   @CreateDateColumn({
     name: 'created_at',
     type: 'timestamptz',
