@@ -1,5 +1,5 @@
 # Velmar-backend
-Explore a complete online shopping experience with our fictional ecommerce. Discover products organized into categories and brands, manage your user account, and enjoy the ease of shopping with carts and orders. Administrators can edit and delete products, brands, and categories to maintain an up-to-date catalog. Secure authentication ensures the protection of personal data. Welcome to a realistic simulation of ecommerce, where efficiency and security come together for an exceptional user experience.
+Explore a complete online shopping experience with my fictional ecommerce. Discover products organized by categories and brands, manage your user account, and enjoy the ease of shopping with carts and orders. Sellers can edit and delete products, brands, and categories to maintain an up-to-date catalog. Secure authentication ensures the protection of personal data. Welcome to a realistic simulation of ecommerce, where efficiency and security come together to offer an exceptional user experience.
 
 [Documentación en español](README-es.md)
 
@@ -74,8 +74,6 @@ GG_KEY=""
 JWT_SECRET=""
 JWT_SECRET_RECOVERY=""
 ```
-
-- The variables starting with POSTGRES should match the data specified in the "docker-compose.yml" file.
 
 - For DATABASE_URL, follow this format: postgres://POSTGRES_USER:POSTGRES_PASSWORD@POSTGRES_HOST:POSTGRES_PORT/POSTGRES_NAME.
 
