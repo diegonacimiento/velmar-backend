@@ -100,6 +100,15 @@ docker-compose up -d pgadmin
 
 ***
 
+# Migraciones
+Debes generar y correr una migración para crear las tablas. Ejecuta los siguientes comandos:
+
+```npm run migrations:generate ./src/database/migrations/create-tables```
+
+```npm run migrations:run```
+
+***
+
 # Iniciar el proyecto
 Para iniciar el proyecto, utiliza el siguiente comando:
 
