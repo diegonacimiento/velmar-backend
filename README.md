@@ -1,73 +1,114 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Velmar-backend
+Explore a complete online shopping experience with our fictional ecommerce. Discover products organized into categories and brands, manage your user account, and enjoy the ease of shopping with carts and orders. Administrators can edit and delete products, brands, and categories to maintain an up-to-date catalog. Secure authentication ensures the protection of personal data. Welcome to a realistic simulation of ecommerce, where efficiency and security come together for an exceptional user experience.
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+[Documentación en español](README-es.md)
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Table of contents
+- [Clone the project](#clone-the-project)
+- [Docker setup](#docker-setup)
+- [Dependency installation](#dependency-installation)
+- [Environment variables](#environment-variables)
+- [Running Docker containers](#Running-Docker-containers)
+- [Starting the project](#Starting-the-project)
 
-## Description
+***
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Clone the project
+To get started, you'll need to clone the project repository into your desired directory. Use the following command:
 
-## Installation
+```git clone https://github.com/diegonacimiento/velmar-backend.git```
 
-```bash
-$ npm install
+***
+
+## Docker setup
+Velmar relies on Docker for containerization. If you haven't already, please [download and install Docker](https://www.docker.com/products/docker-desktop/). Once Docker is installed, ensure that it's running.
+
+In the "docker.compose-yml" file, you'll find configurations for setting up a PostgreSQL container with user and password settings. Here's an example:
+
+```javascript
+´version: '3.8'
+services:
+  postgres:
+    image: postgres:15
+    env_file:
+      - .env
+    ports:
+      - 5432:5432
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+      image: dpage/pgadmin4
+      env_file:
+        - .env
+      ports:
+        - "5050:80"
+      depends_on:
+        - postgres´
 ```
 
-## Running the app
+***
 
-```bash
-# development
-$ npm run start
+## Dependency installation
+To install the necessary dependencies for Velmar, run the following command:
 
-# watch mode
-$ npm run start:dev
+``` npm install ```
 
-# production mode
-$ npm run start:prod
+***
+
+## Environment variables
+Velmar relies on some environment variables. You should create a ".env" file in the project's root directory and define these variables. Here's an example of a ".env" file with explanations:
+```
+POSTGRES_USER="diego" 
+POSTGRES_PASSWORD="1234admin"
+POSTGRES_HOST="localhost"
+POSTGRES_PORT="5432"
+POSTGRES_DB="velmar"
+DATABASE_URL="postgres://diego:1234admin@localhost:5432/velmar"
+PGADMIN_DEFAULT_EMAIL=''
+PGADMIN_DEFAULT_PASSWORD=''
+API_KEY=""
+API_SECRET=""
+GG_EMAIL=""
+GG_KEY=""
+JWT_SECRET=""
+JWT_SECRET_RECOVERY=""
 ```
 
-## Test
+- The variables starting with POSTGRES should match the data specified in the "docker-compose.yml" file.
 
-```bash
-# unit tests
-$ npm run test
+- For DATABASE_URL, follow this format: postgres://POSTGRES_USER:POSTGRES_PASSWORD@POSTGRES_HOST:POSTGRES_PORT/POSTGRES_NAME.
 
-# e2e tests
-$ npm run test:e2e
+- You must configure your own chosen API_KEY and API_SECRET.
 
-# test coverage
-$ npm run test:cov
+- JWT_SECRET and JWT_SECRET_RECOVERY should have unique keys. You can generate them [here](https://keygen.io/#fakeLink/).
+
+#### Email sending
+To configure email sending, ensure you have a Google account linked to your phone number and 2-Step Verification enabled in "Account Management" ⇒ "Security" ⇒ "Google Access." Then, go to "App Passwords" and add 'NodeApp.'
+
+- GG_EMAIL: Use the email for which you generated the application password.
+
+- GG_KEY: Use the generated password; do not share it with anyone.
+
+***
+
+# Running Docker containers
+To start the Docker containers for PostgreSQL and PGAdmin, use the following commands:
+
+```
+docker-compose up -d postgres
+docker-compose up -d pgadmin
 ```
 
-## Support
+***
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+# Starting the project
+To start the project, use the following command:
 
-## Stay in touch
+```npm run start:dev```
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+This command will launch the API, and you can begin using it as intended.
 
-## License
+***
 
-Nest is [MIT licensed](LICENSE).
+This documentation should provide you with the necessary information to set up and use velmar-backend. If you have more questions or encounter issues, feel free to request assistance.
