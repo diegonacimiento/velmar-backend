@@ -2,6 +2,7 @@ import {
   ConflictException,
   Inject,
   Injectable,
+  InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -103,6 +104,8 @@ export class AuthService {
       console.log(error);
       if (error.message === 'jwt expired') {
         throw new ConflictException('Token expired');
+      } else {
+        throw new InternalServerErrorException(error.message);
       }
     }
   }
