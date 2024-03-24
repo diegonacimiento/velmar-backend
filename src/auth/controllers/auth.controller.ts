@@ -5,11 +5,12 @@ import {
   HttpStatus,
   Post,
   Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 
 import { ValidateCredentialsGuard } from '../guards/validate-credentials.guard';
 import { User } from 'src/users/entities/user.entity';
@@ -27,10 +28,20 @@ export class AuthController {
   @UseGuards(ValidateCredentialsGuard, AuthGuard('local'))
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Req() req: Request) {
+  async login(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const user = req.user as User;
 
-    return await this.authService.generateJwt(user);
+    const token = await this.authService.generateJwt(user);
+
+    res.cookie(process.env.TOKEN_NAME, token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      // sameSite: 'strict',
+      path: '/',
+      expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+    });
+
+    return token;
   }
 
   @Post('forgot-password')

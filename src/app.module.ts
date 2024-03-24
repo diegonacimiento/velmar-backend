@@ -33,6 +33,7 @@ import * as Joi from 'joi';
         API_SECRET: Joi.string().required(),
         GG_EMAIL: Joi.string().required(),
         GG_KEY: Joi.string().required(),
+        TOKEN_NAME: Joi.string().required(),
       }),
     }),
     AuthModule,

@@ -45,10 +45,7 @@ export class AuthService {
   async generateJwt(user: User) {
     const payload: PayloadToken = { role: user.role, sub: user.id };
 
-    return {
-      access_token: this.jwtService.sign(payload),
-      user,
-    };
+    return this.jwtService.sign(payload);
   }
 
   async sendEmail({ email }: ForgotPasswordDto) {
@@ -86,7 +83,10 @@ export class AuthService {
         secret: this.configService.jwtSecretRecovery,
       });
 
-      const user = await this.userRepository.findOneBy({ id: payload.sub });
+      const user = await this.userRepository.findOne({
+        where: { id: payload.sub },
+        select: { id: true, recoveryToken: true },
+      });
 
       if (user.recoveryToken !== token) {
         throw new UnauthorizedException();

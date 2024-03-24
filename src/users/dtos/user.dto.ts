@@ -48,7 +48,7 @@ export class CreateUserDto {
 
   @IsString()
   @IsOptional()
-  readonly adress: string;
+  readonly address: string;
 }
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {}

@@ -38,8 +38,9 @@ export class User {
   phone: number;
 
   @Column({ type: 'varchar', length: 255, default: null })
-  adress: string;
+  address: string;
 
+  @Exclude()
   @Column({ type: 'varchar', length: 555, default: null })
   recoveryToken: string;
 

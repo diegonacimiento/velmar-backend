@@ -47,7 +47,7 @@ export const selectOrder = {
     username: true,
     fullname: true,
     email: true,
-    adress: true,
+    address: true,
     phone: true,
   },
 };

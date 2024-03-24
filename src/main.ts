@@ -3,9 +3,12 @@ import { AppModule } from './app.module';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import apiKeyMiddleware from './middlewares/api-key.middleware';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.use(cookieParser());
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -29,6 +32,18 @@ async function bootstrap() {
   SwaggerModule.setup('docs', app, document);
 
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+
+  app.enableCors({
+    origin: (origin, callback) => {
+      if (!origin || [process.env.FRONTEND_URL].includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Access not allowed by CORS'));
+      }
+    },
+    methods: ['POST'],
+    credentials: true,
+  });
 
   app.use(apiKeyMiddleware);
 
