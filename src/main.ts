@@ -41,12 +41,12 @@ async function bootstrap() {
         callback(new Error('Access not allowed by CORS'));
       }
     },
-    methods: ['POST'],
+    methods: ['POST', 'GET', 'PUT', 'DELETE'],
     credentials: true,
   });
 
   app.use(apiKeyMiddleware);
 
-  await app.listen(3000);
+  await app.listen(3001);
 }
 bootstrap();
