@@ -4,7 +4,7 @@ import {
   IsIn,
   IsNotEmpty,
   IsOptional,
-  IsPhoneNumber,
+  IsPositive,
   IsString,
   Matches,
   MinLength,
@@ -42,7 +42,7 @@ export class CreateUserDto {
   })
   readonly role: string;
 
-  @IsPhoneNumber()
+  @IsPositive()
   @IsOptional()
   readonly phone: number;
 

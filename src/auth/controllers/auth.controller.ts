@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
@@ -19,6 +20,8 @@ import {
   ChangePasswordDto,
   ForgotPasswordDto,
 } from '../dtos/forgot-password.dto';
+import { Role } from '../decorators/role.decorator';
+import { ROLE } from '../models/role.model';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -41,7 +44,22 @@ export class AuthController {
       expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
     });
 
-    return token;
+    return 'Login success';
+  }
+
+  @Role(ROLE.SUPERADMIN, ROLE.SALESPERSON, ROLE.CUSTOMER)
+  @Get('logout')
+  @HttpCode(HttpStatus.OK)
+  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    res.cookie(process.env.TOKEN_NAME, '', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      // sameSite: 'strict',
+      path: '/',
+      expires: new Date(Date.now() * 0),
+    });
+
+    return 'Logout success';
   }
 
   @Post('forgot-password')
