@@ -44,7 +44,10 @@ export class AuthController {
       expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
     });
 
-    return 'Login success';
+    return {
+      message: 'Login success',
+      role: user.role,
+    };
   }
 
   @Role(ROLE.SUPERADMIN, ROLE.SALESPERSON, ROLE.CUSTOMER)
