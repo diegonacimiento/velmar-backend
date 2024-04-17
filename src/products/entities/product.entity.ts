@@ -29,11 +29,8 @@ export class Product {
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   price: number;
 
-  @Column({ type: 'int' })
-  stock: number;
-
-  @Column({ type: 'varchar', length: 255 })
-  image: string;
+  @Column('simple-json')
+  images: Array<{ color: string; urls: string[] }>;
 
   @Exclude()
   @CreateDateColumn({

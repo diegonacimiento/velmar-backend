@@ -1,4 +1,5 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   ArrayNotEmpty,
   IsArray,
@@ -6,8 +7,8 @@ import {
   IsOptional,
   IsPositive,
   IsString,
-  IsUrl,
   Min,
+  ValidateNested,
 } from 'class-validator';
 
 export class CreateProductDto {
@@ -24,13 +25,11 @@ export class CreateProductDto {
   @IsNotEmpty()
   readonly price: number;
 
-  @IsPositive()
-  @IsNotEmpty()
-  readonly stock: number;
-
-  @IsUrl()
-  @IsNotEmpty()
-  readonly image: string;
+  @IsArray()
+  @ArrayNotEmpty()
+  @ValidateNested({ each: true })
+  @Type(() => ImageDto)
+  readonly images: ImageDto[];
 
   @IsPositive()
   @IsNotEmpty()
@@ -54,4 +53,13 @@ export class FilterProductDto {
   @IsOptional()
   @Min(0)
   offset: number;
+}
+
+class ImageDto {
+  @IsString()
+  color: string;
+
+  @IsArray()
+  @Type(() => String)
+  urls: string[];
 }
