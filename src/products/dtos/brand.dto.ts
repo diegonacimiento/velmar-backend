@@ -1,8 +1,8 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import {
-  ArrayNotEmpty,
   IsArray,
   IsNotEmpty,
+  IsOptional,
   IsPositive,
   IsString,
   IsUrl,
@@ -20,7 +20,7 @@ export class CreateBrandDto {
 
   @IsArray()
   @IsPositive({ each: true })
-  @ArrayNotEmpty()
+  @IsOptional()
   readonly categoriesIds: number[];
 }
 
