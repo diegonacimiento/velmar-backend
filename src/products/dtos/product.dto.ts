@@ -32,11 +32,11 @@ export class CreateProductDto {
   readonly images: ImageDto[];
 
   @IsPositive()
-  @IsNotEmpty()
+  @IsOptional()
   readonly brandId: number;
 
   @IsArray()
-  @ArrayNotEmpty()
+  @IsOptional()
   @IsPositive({ each: true })
   readonly categoriesIds: number[];
 }
