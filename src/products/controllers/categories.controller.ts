@@ -66,4 +66,13 @@ export class CategoriesController {
       category: await this.categoriesService.delete(id),
     };
   }
+
+  @Role(ROLE.SALESPERSON, ROLE.SUPERADMIN)
+  @Delete(':id/relations')
+  async removeAllRelations(@Param('id', MyParseIntPipe) id: number) {
+    await this.categoriesService.removeAllRelations(id);
+    return {
+      message: 'Relations deleted',
+    };
+  }
 }

@@ -4,8 +4,9 @@ import { Repository } from 'typeorm';
 
 import { Category } from '../entities/category.entity';
 import { CreateCategoryDto, UpdateCategoryDto } from '../dtos/category.dto';
-import { addManyEntities } from 'src/utils/shared-functions';
+import { addManyEntities, removeCategory } from 'src/utils/shared-functions';
 import { Brand } from '../entities/brand.entity';
+import { Product } from '../entities/product.entity';
 
 @Injectable()
 export class CategoriesService {
@@ -14,16 +15,21 @@ export class CategoriesService {
     private categoryRepository: Repository<Category>,
     @InjectRepository(Brand)
     private brandRepository: Repository<Brand>,
+    @InjectRepository(Product)
+    private productRepository: Repository<Product>,
   ) {}
 
   async getAll() {
     return await this.categoryRepository.find();
   }
 
-  async getOne(id: number) {
+  async getOne(id: number, relComplete?: boolean) {
     const category = await this.categoryRepository.findOne({
       where: { id },
-      relations: { products: true, brands: true },
+      relations: {
+        products: relComplete ? { categories: true } : true,
+        brands: relComplete ? { categories: true } : true,
+      },
     });
     if (!category) {
       throw new NotFoundException('Category not found');
@@ -53,5 +59,22 @@ export class CategoriesService {
     const category = await this.getOne(id);
     await this.categoryRepository.delete(id);
     return category;
+  }
+
+  async removeAllRelations(id: number) {
+    const category = await this.getOne(id, true);
+    const products = category.products.map((product) => product);
+    const brands = category.brands.map((brand) => brand);
+    if (products.length === 0 && brands.length === 0) {
+      throw new NotFoundException('This category has no relations');
+    }
+    for (const product of products) {
+      removeCategory(product, id);
+      await this.productRepository.save(product);
+    }
+    for (const brand of brands) {
+      removeCategory(brand, id);
+      await this.brandRepository.save(brand);
+    }
   }
 }

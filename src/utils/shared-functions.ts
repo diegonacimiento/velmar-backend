@@ -66,12 +66,6 @@ export const removeCategory = (entity: any, categoryId: number) => {
     throw new NotFoundException('Category not found in ' + nameEntity);
   }
 
-  if (entity.categories.length === 1) {
-    throw new BadRequestException(
-      `The ${nameEntity} must have at least one category`,
-    );
-  }
-
   delete entity.categories[index];
 };
 
