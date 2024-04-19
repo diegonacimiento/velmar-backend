@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 
 import { Product } from '../entities/product.entity';
 import {
@@ -45,6 +45,16 @@ export class ProductsService {
       throw new NotFoundException('Product not found');
     }
     return product;
+  }
+
+  async getByName(name: string) {
+    const products = await this.productRepository.find({
+      where: { name: ILike(`%${name}%`) },
+    });
+    if (products.length === 0) {
+      throw new NotFoundException('Product not found');
+    }
+    return products;
   }
 
   async create(payload: CreateProductDto) {

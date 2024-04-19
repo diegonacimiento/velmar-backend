@@ -53,6 +53,11 @@ export class FilterProductDto {
   @IsOptional()
   @Min(0)
   offset: number;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  name: string;
 }
 
 class ImageDto {
