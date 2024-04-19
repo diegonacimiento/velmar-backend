@@ -52,7 +52,7 @@ export class Product {
   @DeleteDateColumn({ name: 'deleted_at', type: 'timestamptz', default: null })
   deletedAt: Date;
 
-  @ManyToOne(() => Brand, (brand) => brand.products)
+  @ManyToOne(() => Brand, (brand) => brand.products, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'brand_id' })
   brand: Brand;
 
