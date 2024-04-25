@@ -74,7 +74,7 @@ export const changeEntityRelated = async (
   id: number,
   entity: any,
 ) => {
-  if (entity[repository.metadata.name.toLowerCase()].id === id) {
+  if (entity[repository.metadata.name.toLowerCase()]?.id === id) {
     throw new BadRequestException(
       `${repository.metadata.name} is already related`,
     );
