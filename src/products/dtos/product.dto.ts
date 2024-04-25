@@ -1,6 +1,8 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
+  ArrayMaxSize,
+  ArrayMinSize,
   ArrayNotEmpty,
   IsArray,
   IsNotEmpty,
@@ -36,6 +38,8 @@ export class CreateProductDto {
   readonly brandId: number;
 
   @IsArray()
+  @ArrayMaxSize(3)
+  @ArrayMinSize(1)
   @IsOptional()
   @IsPositive({ each: true })
   readonly categoriesIds: number[];

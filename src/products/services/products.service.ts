@@ -74,6 +74,15 @@ export class ProductsService {
 
   async update(id: number, payload: UpdateProductDto) {
     const product = await this.getOne(id);
+    if (payload.categoriesIds) {
+      product.categories = [];
+      for (const categoryId of payload.categoriesIds) {
+        await addCategory(this.categoryRepository, categoryId, product);
+      }
+    }
+    if (payload.brandId) {
+      await changeEntityRelated(this.brandRepository, payload.brandId, product);
+    }
     this.productRepository.merge(product, payload);
     return await this.productRepository.save(product);
   }

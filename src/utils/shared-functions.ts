@@ -40,7 +40,7 @@ export const addCategory = async (repository: any, id: number, entity: any) => {
   const category = await repository.findOne({ where: { id } });
 
   if (!category) {
-    throw new NotFoundException(`Category not found`);
+    throw new NotFoundException(`Category with id '${id}' not found`);
   }
 
   const isRepeated = entity.categories.some((category) => category.id === id);
