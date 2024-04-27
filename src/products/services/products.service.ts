@@ -80,8 +80,14 @@ export class ProductsService {
         await addCategory(this.categoryRepository, categoryId, product);
       }
     }
-    if (payload.brandId) {
-      await changeEntityRelated(this.brandRepository, payload.brandId, product);
+    if (payload.brandId || payload.brandId === null) {
+      payload.brandId === null
+        ? (product.brand = null)
+        : await changeEntityRelated(
+            this.brandRepository,
+            payload.brandId,
+            product,
+          );
     }
     this.productRepository.merge(product, payload);
     return await this.productRepository.save(product);
