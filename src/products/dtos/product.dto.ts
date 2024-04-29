@@ -27,6 +27,7 @@ export class CreateProductDto {
   readonly price: number;
 
   @IsArray()
+  @ArrayMaxSize(8)
   @ArrayNotEmpty()
   @ValidateNested({ each: true })
   @Type(() => ImageDto)
