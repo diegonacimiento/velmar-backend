@@ -14,6 +14,7 @@ import {
 
 import { Brand } from './brand.entity';
 import { Category } from './category.entity';
+import { ImageProduct } from '../types/product';
 
 @Entity('products')
 export class Product {
@@ -30,7 +31,7 @@ export class Product {
   price: number;
 
   @Column('simple-json')
-  images: Array<{ color: string; urls: string[] }>;
+  images: Array<ImageProduct>;
 
   @Exclude()
   @CreateDateColumn({

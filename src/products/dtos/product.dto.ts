@@ -4,6 +4,7 @@ import {
   ArrayMaxSize,
   ArrayNotEmpty,
   IsArray,
+  IsEnum,
   IsNotEmpty,
   IsOptional,
   IsPositive,
@@ -11,6 +12,7 @@ import {
   Min,
   ValidateNested,
 } from 'class-validator';
+import { Size } from '../types/product';
 
 export class CreateProductDto {
   @ApiProperty()
@@ -70,4 +72,8 @@ class ImageDto {
   @IsArray()
   @Type(() => String)
   urls: string[];
+
+  @IsArray()
+  @IsEnum(Size, { each: true })
+  sizes: Size[];
 }
