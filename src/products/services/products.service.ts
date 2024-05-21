@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 import { Product } from '../entities/product.entity';
 import {
@@ -28,12 +28,44 @@ export class ProductsService {
   ) {}
 
   async getAll(params: FilterProductDto) {
-    const { limit = 5, offset = 0 } = params;
-    return await this.productRepository.find({
-      relations: { brand: true },
-      skip: offset,
-      take: limit,
-    });
+    const {
+      name,
+      categories,
+      brands,
+      minPrice,
+      maxPrice,
+      limit = 10,
+      offset = 0,
+    } = params;
+
+    let query = this.productRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.brand', 'brand')
+      .leftJoinAndSelect('product.categories', 'category');
+
+    if (name) {
+      query = query.andWhere('product.name ILIKE :name', { name: `%${name}%` });
+    }
+
+    if (categories && categories.length > 0) {
+      query = query.andWhere('category.id IN (:...categories)', { categories });
+    }
+
+    if (brands && brands.length > 0) {
+      query = query.andWhere('brand.id IN (:...brands)', { brands });
+    }
+
+    if (minPrice !== undefined) {
+      query = query.andWhere('product.price >= :minPrice', { minPrice });
+    }
+
+    if (maxPrice !== undefined) {
+      query = query.andWhere('product.price <= :maxPrice', { maxPrice });
+    }
+
+    query = query.skip(offset).take(limit);
+
+    return query.getMany();
   }
 
   async getOne(id: number) {
@@ -45,16 +77,6 @@ export class ProductsService {
       throw new NotFoundException('Product not found');
     }
     return product;
-  }
-
-  async getByName(name: string) {
-    const products = await this.productRepository.find({
-      where: { name: ILike(`%${name}%`) },
-    });
-    if (products.length === 0) {
-      throw new NotFoundException('Product not found');
-    }
-    return products;
   }
 
   async create(payload: CreateProductDto) {

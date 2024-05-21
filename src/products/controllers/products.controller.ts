@@ -33,9 +33,6 @@ export class ProductsController {
   @Public()
   @Get()
   async getAll(@Query() params: FilterProductDto) {
-    if (params.name) {
-      return await this.productsService.getByName(params.name);
-    }
     return await this.productsService.getAll(params);
   }
 

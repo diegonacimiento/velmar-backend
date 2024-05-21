@@ -63,6 +63,24 @@ export class FilterProductDto {
   @IsOptional()
   @IsString()
   name: string;
+
+  @ApiProperty()
+  @IsOptional()
+  categories: number[];
+
+  @ApiProperty()
+  @IsOptional()
+  brands: number[];
+
+  @ApiProperty()
+  @IsOptional()
+  @IsPositive()
+  minPrice: number;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsPositive()
+  maxPrice: number;
 }
 
 class ImageDto {
