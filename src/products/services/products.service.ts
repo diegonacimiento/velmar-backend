@@ -48,11 +48,20 @@ export class ProductsService {
     }
 
     if (categories && categories.length > 0) {
-      query = query.andWhere('category.id IN (:...categories)', { categories });
+      const categoriesArray = Array.isArray(categories)
+        ? categories
+        : [categories];
+
+      query = query.andWhere('category.id IN (:...categories)', {
+        categories: categoriesArray,
+      });
     }
 
     if (brands && brands.length > 0) {
-      query = query.andWhere('brand.id IN (:...brands)', { brands });
+      const brandsArray = Array.isArray(brands) ? brands : [brands];
+      query = query.andWhere('brand.id IN (:...brands)', {
+        brands: brandsArray,
+      });
     }
 
     if (minPrice !== undefined) {
