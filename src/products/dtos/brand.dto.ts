@@ -5,7 +5,6 @@ import {
   IsOptional,
   IsPositive,
   IsString,
-  IsUrl,
 } from 'class-validator';
 
 export class CreateBrandDto {
@@ -13,10 +12,6 @@ export class CreateBrandDto {
   @IsString()
   @IsNotEmpty()
   readonly name: string;
-
-  @IsUrl()
-  @IsNotEmpty()
-  readonly image: string;
 
   @IsArray()
   @IsPositive({ each: true })

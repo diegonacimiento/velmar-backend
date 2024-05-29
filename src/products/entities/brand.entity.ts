@@ -22,9 +22,6 @@ export class Brand {
   @Column({ type: 'varchar', length: 60 })
   name: string;
 
-  @Column({ type: 'varchar', length: 255 })
-  image: string;
-
   @Exclude()
   @CreateDateColumn({
     name: 'created_at',
