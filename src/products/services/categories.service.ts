@@ -57,6 +57,22 @@ export class CategoriesService {
 
   async delete(id: number) {
     const category = await this.getOne(id);
+
+    for (const brand of category.brands) {
+      await this.brandRepository
+        .createQueryBuilder()
+        .relation(Brand, 'categories')
+        .of(brand)
+        .remove(category);
+    }
+
+    for (const product of category.products) {
+      await this.productRepository
+        .createQueryBuilder()
+        .relation(Product, 'categories')
+        .of(product)
+        .remove(category);
+    }
     await this.categoryRepository.delete(id);
     return category;
   }
