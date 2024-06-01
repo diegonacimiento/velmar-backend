@@ -1,5 +1,6 @@
 import {
   Body,
+  ConflictException,
   Controller,
   Delete,
   Get,
@@ -50,10 +51,19 @@ export class UsersController {
   @Public()
   @Post()
   async create(@Body() payload: CreateUserDto) {
-    return {
-      message: 'User created',
-      user: await this.usersService.create(payload),
-    };
+    try {
+      return {
+        message: 'User created',
+        user: await this.usersService.create(payload),
+      };
+    } catch (error) {
+      if (error.code === '23505') {
+        console.error('Duplicate key error:', error.detail);
+        throw new ConflictException(error.detail);
+      } else {
+        throw error;
+      }
+    }
   }
 
   @Role(ROLE.SUPERADMIN)

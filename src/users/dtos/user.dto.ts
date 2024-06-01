@@ -1,15 +1,41 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsEmail,
   IsIn,
   IsNotEmpty,
+  IsNotEmptyObject,
+  IsObject,
   IsOptional,
   IsPositive,
   IsString,
   Matches,
   MinLength,
+  ValidateNested,
 } from 'class-validator';
 import { ROLE } from 'src/auth/models/role.model';
+
+class AddressDto {
+  @IsOptional()
+  @IsString()
+  street: string;
+
+  @IsOptional()
+  @IsString()
+  apartment: string;
+
+  @IsOptional()
+  @IsString()
+  city: string;
+
+  @IsOptional()
+  @IsString()
+  state: string;
+
+  @IsOptional()
+  @IsString()
+  country: string;
+}
 
 export class CreateUserDto {
   @ApiProperty()
@@ -46,9 +72,12 @@ export class CreateUserDto {
   @IsOptional()
   readonly phone: number;
 
-  @IsString()
+  @IsObject({ each: true })
+  @IsNotEmptyObject()
+  @Type(() => AddressDto)
+  @ValidateNested({ each: true })
   @IsOptional()
-  readonly address: string;
+  readonly address: AddressDto;
 }
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {}

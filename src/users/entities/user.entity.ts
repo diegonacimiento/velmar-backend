@@ -18,14 +18,14 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'varchar', length: 50, unique: true })
   username: string;
 
   @Exclude()
   @Column({ type: 'varchar', length: 255 })
   password: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, unique: true })
   email: string;
 
   @Column({ type: 'varchar', length: 75 })
@@ -37,8 +37,14 @@ export class User {
   @Column({ type: 'varchar', length: 45, default: null })
   phone: number;
 
-  @Column({ type: 'varchar', length: 255, default: null })
-  address: string;
+  @Column({ type: 'simple-json', default: null })
+  address: {
+    street: string;
+    apartment: string;
+    city: string;
+    state: string;
+    country: string;
+  };
 
   @Exclude()
   @Column({ type: 'varchar', length: 555, default: null })

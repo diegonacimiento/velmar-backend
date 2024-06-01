@@ -47,7 +47,13 @@ export const selectOrder = {
     username: true,
     fullname: true,
     email: true,
-    address: true,
+    address: {
+      stree: true,
+      apartment: true,
+      city: true,
+      state: true,
+      country: true,
+    },
     phone: true,
   },
 };
