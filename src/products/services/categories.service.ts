@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -7,6 +11,7 @@ import { CreateCategoryDto, UpdateCategoryDto } from '../dtos/category.dto';
 import { addManyEntities, removeCategory } from 'src/utils/shared-functions';
 import { Brand } from '../entities/brand.entity';
 import { Product } from '../entities/product.entity';
+import { ROLE } from 'src/auth/models/role.model';
 
 @Injectable()
 export class CategoriesService {
@@ -37,8 +42,10 @@ export class CategoriesService {
     return category;
   }
 
-  async create(payload: CreateCategoryDto) {
-    const newCategory = this.categoryRepository.create(payload);
+  async create(payload: CreateCategoryDto, role: ROLE) {
+    const newCategory = this.categoryRepository.create(
+      role === ROLE.SUPERADMIN ? { ...payload, isProtected: true } : payload,
+    );
     if (payload.brandsIds) {
       await addManyEntities(
         this.brandRepository,
@@ -49,14 +56,25 @@ export class CategoriesService {
     return await this.categoryRepository.save(newCategory);
   }
 
-  async update(id: number, payload: UpdateCategoryDto) {
+  async update(id: number, payload: UpdateCategoryDto, role: ROLE) {
     const category = await this.getOne(id);
+    if (category.isProtected && role !== ROLE.SUPERADMIN) {
+      throw new UnauthorizedException(
+        'You do not have permission to perform this action',
+      );
+    }
     this.categoryRepository.merge(category, payload);
     return await this.categoryRepository.save(category);
   }
 
-  async delete(id: number) {
+  async delete(id: number, role: ROLE) {
     const category = await this.getOne(id);
+
+    if (category.isProtected && role !== ROLE.SUPERADMIN) {
+      throw new UnauthorizedException(
+        'You do not have permission to perform this action',
+      );
+    }
 
     for (const brand of category.brands) {
       await this.brandRepository

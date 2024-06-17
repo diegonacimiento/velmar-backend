@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -17,6 +21,7 @@ import {
   changeEntityRelated,
   removeCategory,
 } from 'src/utils/shared-functions';
+import { ROLE } from 'src/auth/models/role.model';
 
 @Injectable()
 export class ProductsService {
@@ -88,11 +93,15 @@ export class ProductsService {
     return product;
   }
 
-  async create(payload: CreateProductDto) {
-    const newProduct = this.productRepository.create(payload);
+  async create(payload: CreateProductDto, role: ROLE) {
+    const newProduct = this.productRepository.create(
+      role === ROLE.SUPERADMIN ? { ...payload, isProtected: true } : payload,
+    );
+
     if (payload.brandId) {
       await addOneEntity(this.brandRepository, payload.brandId, newProduct);
     }
+
     if (payload.categoriesIds) {
       await addManyEntities(
         this.categoryRepository,
@@ -103,8 +112,15 @@ export class ProductsService {
     return await this.productRepository.save(newProduct);
   }
 
-  async update(id: number, payload: UpdateProductDto) {
+  async update(id: number, payload: UpdateProductDto, role: ROLE) {
     const product = await this.getOne(id);
+
+    if (product.isProtected && role !== ROLE.SUPERADMIN) {
+      throw new UnauthorizedException(
+        'You do not have permission to perform this action',
+      );
+    }
+
     if (payload.categoriesIds) {
       product.categories = [];
       for (const categoryId of payload.categoriesIds) {
@@ -124,8 +140,13 @@ export class ProductsService {
     return await this.productRepository.save(product);
   }
 
-  async delete(id: number) {
+  async delete(id: number, role: ROLE) {
     const product = await this.getOne(id);
+    if (product.isProtected && role !== ROLE.SUPERADMIN) {
+      throw new UnauthorizedException(
+        'You do not have permission to perform this action',
+      );
+    }
     await this.productRepository.delete(id);
     return product;
   }

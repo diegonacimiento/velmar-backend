@@ -23,6 +23,9 @@ export class Category {
   @Column({ type: 'varchar', length: 255 })
   image: string;
 
+  @Column({ type: 'boolean', default: false })
+  isProtected: boolean;
+
   @Exclude()
   @CreateDateColumn({
     name: 'created_at',

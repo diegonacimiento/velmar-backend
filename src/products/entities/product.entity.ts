@@ -33,6 +33,9 @@ export class Product {
   @Column('simple-json')
   images: Array<ImageProduct>;
 
+  @Column({ type: 'boolean', default: false })
+  isProtected: boolean;
+
   @Exclude()
   @CreateDateColumn({
     name: 'created_at',

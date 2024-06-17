@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -10,6 +14,7 @@ import {
   removeCategory,
 } from 'src/utils/shared-functions';
 import { Category } from '../entities/category.entity';
+import { ROLE } from 'src/auth/models/role.model';
 
 @Injectable()
 export class BrandsService {
@@ -34,8 +39,10 @@ export class BrandsService {
     return brand;
   }
 
-  async create(payload: CreateBrandDto) {
-    const newBrand = this.brandRepository.create(payload);
+  async create(payload: CreateBrandDto, role: ROLE) {
+    const newBrand = this.brandRepository.create(
+      role === ROLE.SUPERADMIN ? { ...payload, isProtected: true } : payload,
+    );
     if (payload.categoriesIds) {
       await addManyEntities(
         this.categoryRepository,
@@ -46,14 +53,24 @@ export class BrandsService {
     return await this.brandRepository.save(newBrand);
   }
 
-  async update(id: number, payload: UpdateBrandDto) {
+  async update(id: number, payload: UpdateBrandDto, role: ROLE) {
     const brand = await this.getOne(id);
+    if (brand.isProtected && role !== ROLE.SUPERADMIN) {
+      throw new UnauthorizedException(
+        'You do not have permission to perform this action',
+      );
+    }
     this.brandRepository.merge(brand, payload);
     return await this.brandRepository.save(brand);
   }
 
-  async delete(id: number) {
+  async delete(id: number, role: ROLE) {
     const brand = await this.getOne(id);
+    if (brand.isProtected && role !== ROLE.SUPERADMIN) {
+      throw new UnauthorizedException(
+        'You do not have permission to perform this action',
+      );
+    }
     await this.brandRepository.delete(id);
     return brand;
   }

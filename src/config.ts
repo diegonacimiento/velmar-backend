@@ -16,5 +16,6 @@ export default registerAs('config', () => {
     ggEmail: process.env.GG_EMAIL,
     ggKey: process.env.GG_KEY,
     tokenName: process.env.TOKEN_NAME,
+    frontendUrl: process.env.FRONTEND_URL,
   };
 });

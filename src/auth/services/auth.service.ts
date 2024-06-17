@@ -19,6 +19,7 @@ import {
   ChangePasswordDto,
   ForgotPasswordDto,
 } from '../dtos/forgot-password.dto';
+import { ROLE } from '../models/role.model';
 
 @Injectable()
 export class AuthService {
@@ -43,7 +44,10 @@ export class AuthService {
   }
 
   async generateJwt(user: User) {
-    const payload: PayloadToken = { role: user.role, sub: user.id };
+    const payload: PayloadToken = {
+      role: ROLE[user.role.toUpperCase()],
+      sub: user.id,
+    };
 
     return this.jwtService.sign(payload);
   }
@@ -62,7 +66,7 @@ export class AuthService {
         secret: this.configService.jwtSecretRecovery,
       });
 
-      const link = `https://myfrontend.com/recovery?token=${token}`;
+      const link = `${this.configService.frontendUrl}/recovery?token=${token}`;
 
       user.recoveryToken = token;
 

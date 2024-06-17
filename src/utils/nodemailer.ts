@@ -41,7 +41,6 @@ const createMessage = (link: string, user: string) => {
     If you didn't request this, please ignore this message. Your current password will remain valid.
     <br/><br/>
     Thanks!<br/><br/>
-    Diego Nacimiento<br/><br/>
     Velmar
   </p>`;
 };
