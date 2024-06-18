@@ -4,7 +4,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 
 import { Category } from '../entities/category.entity';
 import { CreateCategoryDto, UpdateCategoryDto } from '../dtos/category.dto';
@@ -22,6 +22,7 @@ export class CategoriesService {
     private brandRepository: Repository<Brand>,
     @InjectRepository(Product)
     private productRepository: Repository<Product>,
+    private dataSource: DataSource,
   ) {}
 
   async getAll() {
@@ -68,31 +69,43 @@ export class CategoriesService {
   }
 
   async delete(id: number, role: ROLE) {
-    const category = await this.getOne(id);
+    const queryRunner = this.dataSource.createQueryRunner();
 
-    if (category.isProtected && role !== ROLE.SUPERADMIN) {
-      throw new UnauthorizedException(
-        'You do not have permission to perform this action',
-      );
-    }
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
-    for (const brand of category.brands) {
-      await this.brandRepository
-        .createQueryBuilder()
-        .relation(Brand, 'categories')
-        .of(brand)
-        .remove(category);
-    }
+    try {
+      const category = await this.getOne(id);
 
-    for (const product of category.products) {
-      await this.productRepository
-        .createQueryBuilder()
-        .relation(Product, 'categories')
-        .of(product)
-        .remove(category);
+      if (category.isProtected && role !== ROLE.SUPERADMIN) {
+        throw new UnauthorizedException(
+          'You do not have permission to perform this action',
+        );
+      }
+
+      for (const brand of category.brands) {
+        await queryRunner.manager
+          .createQueryBuilder()
+          .relation(Brand, 'categories')
+          .of(brand)
+          .remove(category);
+      }
+
+      for (const product of category.products) {
+        await queryRunner.manager
+          .createQueryBuilder()
+          .relation(Product, 'categories')
+          .of(product)
+          .remove(category);
+      }
+      await queryRunner.manager.delete(Category, id);
+      return category;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
     }
-    await this.categoryRepository.delete(id);
-    return category;
   }
 
   async removeAllRelations(id: number) {
