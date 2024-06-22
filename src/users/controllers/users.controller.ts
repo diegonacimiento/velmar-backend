@@ -14,7 +14,11 @@ import { ApiTags } from '@nestjs/swagger';
 
 import { UsersService } from '../services/users.service';
 import { MyParseIntPipe } from 'src/common/my-parse-int/my-parse-int.pipe';
-import { CreateUserDto, UpdateUserDto } from '../dtos/user.dto';
+import {
+  CreateUserDto,
+  UpdatePasswordDto,
+  UpdateUserDto,
+} from '../dtos/user.dto';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { RoleGuard } from 'src/auth/guards/role.guard';
 import { Role } from 'src/auth/decorators/role.decorator';
@@ -64,6 +68,19 @@ export class UsersController {
         throw error;
       }
     }
+  }
+
+  @Role(ROLE.SUPERADMIN, ROLE.SALESPERSON, ROLE.CUSTOMER)
+  @Put('update-my-password')
+  async updateMyPassword(
+    @Body() payload: UpdatePasswordDto,
+    @Req() req: Request,
+  ) {
+    const user = req.user as PayloadToken;
+    await this.usersService.updatePassword(user.sub, payload);
+    return {
+      message: 'Password updated',
+    };
   }
 
   @Role(ROLE.SUPERADMIN)

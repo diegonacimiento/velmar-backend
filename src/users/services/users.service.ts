@@ -1,10 +1,18 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
 import { User } from '../entities/user.entity';
-import { CreateUserDto, UpdateUserDto } from '../dtos/user.dto';
+import {
+  CreateUserDto,
+  UpdatePasswordDto,
+  UpdateUserDto,
+} from '../dtos/user.dto';
 
 @Injectable()
 export class UsersService {
@@ -43,6 +51,29 @@ export class UsersService {
     const user = await this.getOne(id);
 
     this.userRepository.merge(user, payload);
+
+    return await this.userRepository.save(user);
+  }
+
+  async updatePassword(id: number, payload: UpdatePasswordDto) {
+    const user = await this.userRepository.findOne({
+      where: { id },
+      select: { id: true, password: true },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const isMatch = await bcrypt.compare(payload.password, user.password);
+
+    if (!isMatch) {
+      throw new UnauthorizedException('Incorrect password');
+    }
+
+    const hash = await bcrypt.hash(payload.newPassword, 10);
+
+    this.userRepository.merge(user, { password: hash });
 
     return await this.userRepository.save(user);
   }
