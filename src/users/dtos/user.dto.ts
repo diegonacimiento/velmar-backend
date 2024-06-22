@@ -1,4 +1,4 @@
-import { ApiProperty, OmitType, PartialType, PickType } from '@nestjs/swagger';
+import { ApiProperty, OmitType, PartialType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsEmail,
@@ -84,7 +84,10 @@ export class UpdateUserDto extends PartialType(
   OmitType(CreateUserDto, ['password']),
 ) {}
 
-export class UpdatePasswordDto extends PickType(CreateUserDto, ['password']) {
+export class UpdatePasswordDto {
+  @IsNotEmpty()
+  readonly password: string;
+
   @IsString()
   @IsNotEmpty()
   @MinLength(6)
