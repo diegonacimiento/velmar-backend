@@ -4,7 +4,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
 import { User } from '../entities/user.entity';
@@ -13,11 +13,13 @@ import {
   UpdatePasswordDto,
   UpdateUserDto,
 } from '../dtos/user.dto';
+import { Cart } from '../entities/cart.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
+    private dataSource: DataSource,
   ) {}
 
   async getAll() {
@@ -38,13 +40,35 @@ export class UsersService {
   }
 
   async create(payload: CreateUserDto) {
-    const newUser = this.userRepository.create(payload);
+    const queryRunner = this.dataSource.createQueryRunner();
 
-    const passwordHash = await bcrypt.hash(newUser.password, 10);
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
-    newUser.password = passwordHash;
+    try {
+      const newUser = this.userRepository.create(payload);
 
-    return await this.userRepository.save(newUser);
+      const passwordHash = await bcrypt.hash(newUser.password, 10);
+
+      newUser.password = passwordHash;
+
+      await queryRunner.manager.save(User, newUser);
+
+      const newCart = new Cart();
+
+      newCart.user = newUser;
+
+      await queryRunner.manager.save(Cart, newCart);
+
+      await queryRunner.commitTransaction();
+
+      return newUser;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   async update(id: number, payload: UpdateUserDto) {

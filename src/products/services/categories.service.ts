@@ -99,6 +99,9 @@ export class CategoriesService {
           .remove(category);
       }
       await queryRunner.manager.delete(Category, id);
+
+      await queryRunner.commitTransaction();
+
       return category;
     } catch (error) {
       await queryRunner.rollbackTransaction();
