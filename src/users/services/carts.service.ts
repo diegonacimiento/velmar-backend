@@ -55,6 +55,11 @@ export class CartsService {
   }
 
   async create(payload: CreateCartDto) {
+    if (!payload.userId) {
+      throw new BadRequestException(
+        'You must send an id that belongs to a user',
+      );
+    }
     const cart = await this.cartRepository.findOne({
       where: { user: { id: payload.userId } },
     });

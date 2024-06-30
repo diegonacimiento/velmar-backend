@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -48,6 +52,12 @@ export class OrdersService {
   }
 
   async create(payload: CreateOrderDto) {
+    if (!payload.userId) {
+      throw new BadRequestException(
+        'You must send an id that belongs to a user',
+      );
+    }
+
     const newOrder = this.orderRepository.create();
 
     if (payload.userId) {

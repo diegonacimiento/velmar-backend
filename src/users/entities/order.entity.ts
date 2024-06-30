@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 
 import { User } from './user.entity';
+import { Expose } from 'class-transformer';
 // import { Exclude, Expose } from 'class-transformer';
 
 @Entity('orders')
@@ -69,16 +70,16 @@ export class Order {
   //   return [];
   // }
 
-  // @Expose()
-  // get total() {
-  //   if (this.items) {
-  //     return this.items
-  //       .filter((item) => !!item)
-  //       .reduce((total, item) => {
-  //         const subTotal = item.quantity * item.product.price;
-  //         return total + subTotal;
-  //       }, 0);
-  //   }
-  //   return 0;
-  // }
+  @Expose()
+  get total() {
+    if (this.products) {
+      return this.products
+        .filter((product) => !!product)
+        .reduce((total, product) => {
+          const subTotal = product.quantity * product.price;
+          return total + subTotal;
+        }, 0);
+    }
+    return 0;
+  }
 }
