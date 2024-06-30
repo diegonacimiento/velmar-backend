@@ -60,7 +60,7 @@ export class OrdersService {
 
   async update(id: number, payload: UpdateOrderDto) {
     const order = await this.getOne(id);
-    if (!order || order.user.id !== payload.userId) {
+    if (!order || order?.user?.id !== payload.userId) {
       throw new NotFoundException('Order not found');
     }
     this.orderRepository.merge(order, payload);
