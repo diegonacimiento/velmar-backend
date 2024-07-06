@@ -9,6 +9,7 @@ import {
 
 import { Product } from '../../products/entities/product.entity';
 import { Cart } from './cart.entity';
+import { Size } from 'src/products/types/product';
 
 @Entity('cart_items')
 export class CartItem {
@@ -17,6 +18,9 @@ export class CartItem {
 
   @Column({ type: 'int' })
   quantity: number;
+
+  @Column({ type: 'enum', enum: Size })
+  size: Size;
 
   @CreateDateColumn({
     name: 'created_at',

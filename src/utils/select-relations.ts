@@ -26,10 +26,12 @@ export const selectCart = {
   items: {
     id: true,
     quantity: true,
+    size: true,
     product: {
       id: true,
       name: true,
       price: true,
+      images: true,
       brand: { id: true, name: true },
     },
   },

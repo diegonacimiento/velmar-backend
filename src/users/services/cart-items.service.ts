@@ -64,6 +64,7 @@ export class CartItemsService {
       where: {
         cart: { user: { id: payload.userId } },
         product: { id: payload.productId },
+        size: payload.size,
       },
       relations: relationsCartItem,
       select: selectCartItem,

@@ -26,16 +26,18 @@ import { PayloadToken } from 'src/auth/models/token.model';
 export class CartsController {
   constructor(private cartsService: CartsService) {}
 
-  @Role(ROLE.SUPERADMIN, ROLE.CUSTOMER)
+  @Role(ROLE.SUPERADMIN)
   @Get()
-  async getAll(@Req() req: Request) {
+  async getAll() {
+    return await this.cartsService.getAll();
+  }
+
+  @Role(ROLE.SUPERADMIN, ROLE.CUSTOMER, ROLE.SALESPERSON)
+  @Get('my-cart')
+  async getMyCart(@Req() req: Request) {
     const user = req.user as PayloadToken;
 
-    if (user.role === ROLE.CUSTOMER) {
-      return await this.cartsService.getOneByUser(user.sub);
-    }
-
-    return await this.cartsService.getAll();
+    return await this.cartsService.getOneByUser(user.sub);
   }
 
   @Role(ROLE.SUPERADMIN)
