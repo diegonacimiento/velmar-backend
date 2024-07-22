@@ -11,6 +11,7 @@ import {
 
 import { User } from './user.entity';
 import { Expose } from 'class-transformer';
+import { Size } from 'src/products/types/product';
 // import { Exclude, Expose } from 'class-transformer';
 
 @Entity('orders')
@@ -41,11 +42,12 @@ export class Order {
 
   @Column('simple-json', { nullable: true })
   products: Array<{
-    productId: number;
+    id: number;
     name: string;
     quantity: number;
-    price: number;
-    brand: { id: number; name: string };
+    size: Size;
+    price: string;
+    brand: { id: number; name: string; isProtected: boolean };
   }>;
 
   @Column({ type: 'varchar', default: 'in-progress' })
@@ -76,7 +78,7 @@ export class Order {
       return this.products
         .filter((product) => !!product)
         .reduce((total, product) => {
-          const subTotal = product.quantity * product.price;
+          const subTotal = product.quantity * Number(product.price);
           return total + subTotal;
         }, 0);
     }

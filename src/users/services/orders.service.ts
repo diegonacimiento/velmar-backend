@@ -7,11 +7,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Order } from '../entities/order.entity';
-import { CreateOrderDto, UpdateOrderDto } from '../dtos/order.dto';
-import { addCartInOrder, addOneEntity } from 'src/utils/shared-functions';
+import {
+  CreateOrderDto,
+  FilterOrderDto,
+  UpdateOrderDto,
+} from '../dtos/order.dto';
+import { addOneEntity } from 'src/utils/shared-functions';
 import { User } from '../entities/user.entity';
 import { Cart } from '../entities/cart.entity';
 import { relationsOrder, selectOrder } from 'src/utils/select-relations';
+import { ORDER_STATUS } from '../model/order-status.model';
 
 @Injectable()
 export class OrdersService {
@@ -23,6 +28,7 @@ export class OrdersService {
 
   async getAll() {
     return await this.orderRepository.find({
+      where: { status: ORDER_STATUS.SOLD },
       relations: relationsOrder,
       select: selectOrder,
     });
@@ -42,11 +48,30 @@ export class OrdersService {
     return order;
   }
 
-  async getAllByUser(userId: number) {
-    const orders = await this.orderRepository.find({
-      where: { user: { id: userId } },
+  async getOneByUser(id: number, userId: number) {
+    const order = await this.orderRepository.findOne({
+      where: { id, user: { id: userId } },
       relations: relationsOrder,
       select: selectOrder,
+    });
+
+    if (!order) {
+      throw new NotFoundException('Order not found');
+    }
+
+    return order;
+  }
+
+  async getAllByUser(userId: number, params: FilterOrderDto) {
+    const { offset = 0, limit = 10 } = params;
+
+    const orders = await this.orderRepository.find({
+      where: { user: { id: userId }, status: ORDER_STATUS.SOLD },
+      relations: relationsOrder,
+      select: selectOrder,
+      order: { createdAt: 'DESC' },
+      skip: offset,
+      take: limit,
     });
     return orders;
   }
@@ -62,8 +87,11 @@ export class OrdersService {
 
     if (payload.userId) {
       await addOneEntity(this.userRepository, payload.userId, newOrder);
-      await addCartInOrder(this.cartRepository, payload.userId, newOrder);
+      // await addCartInOrder(this.cartRepository, payload.userId, newOrder);
     }
+
+    newOrder.products = payload.cart;
+    newOrder.status = ORDER_STATUS.SOLD;
 
     return await this.orderRepository.save(newOrder);
   }

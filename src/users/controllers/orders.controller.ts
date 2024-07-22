@@ -8,6 +8,7 @@ import {
   Put,
   UseGuards,
   Req,
+  Query,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
@@ -18,7 +19,11 @@ import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { RoleGuard } from 'src/auth/guards/role.guard';
 import { Role } from 'src/auth/decorators/role.decorator';
 import { ROLE } from 'src/auth/models/role.model';
-import { CreateOrderDto, UpdateOrderDto } from '../dtos/order.dto';
+import {
+  CreateOrderDto,
+  FilterOrderDto,
+  UpdateOrderDto,
+} from '../dtos/order.dto';
 import { PayloadToken } from 'src/auth/models/token.model';
 import { ApiSecretGuard } from '../guards/api-secret.guard';
 import { ORDER_STATUS } from '../model/order-status.model';
@@ -29,30 +34,55 @@ import { ORDER_STATUS } from '../model/order-status.model';
 export class OrdersController {
   constructor(private ordersService: OrdersService) {}
 
-  @Role(ROLE.SUPERADMIN, ROLE.CUSTOMER)
-  @Get()
-  async getAll(@Req() req: Request) {
-    const user = req.user as PayloadToken;
-    if (user.role === ROLE.CUSTOMER) {
-      return await this.ordersService.getAllByUser(user.sub);
-    }
+  @Role(ROLE.SUPERADMIN)
+  @Get('/all')
+  async getAll() {
     return await this.ordersService.getAll();
   }
 
   @Role(ROLE.SUPERADMIN)
-  @Get(':id')
-  async getOne(@Param('id', MyParseIntPipe) id: number) {
+  @Get('/all/:userId')
+  async getAllFromUser(
+    @Param('userId', MyParseIntPipe) userId: number,
+    @Query() params: FilterOrderDto,
+  ) {
+    return await this.ordersService.getAllByUser(userId, params);
+  }
+
+  @Role(ROLE.SUPERADMIN)
+  @Get('/one/:id')
+  async getOneFromUser(@Param('id', MyParseIntPipe) id: number) {
     return await this.ordersService.getOne(id);
   }
 
-  @Role(ROLE.SUPERADMIN, ROLE.CUSTOMER)
+  @Role(ROLE.SUPERADMIN, ROLE.SALESPERSON, ROLE.CUSTOMER)
+  @Get()
+  async getAllByUser(@Req() req: Request, @Query() params: FilterOrderDto) {
+    const user = req.user as PayloadToken;
+
+    return await this.ordersService.getAllByUser(user.sub, params);
+  }
+
+  @Role(ROLE.SUPERADMIN, ROLE.SALESPERSON, ROLE.CUSTOMER)
+  @Get(':id')
+  async getOneByUser(
+    @Req() req: Request,
+    @Param('id', MyParseIntPipe) id: number,
+  ) {
+    const user = req.user as PayloadToken;
+
+    return await this.ordersService.getOneByUser(id, user.sub);
+  }
+
+  @Role(ROLE.SUPERADMIN, ROLE.SALESPERSON, ROLE.CUSTOMER)
   @Post()
   async create(@Body() payload: CreateOrderDto, @Req() req: Request) {
     const user = req.user as PayloadToken;
     return {
       message: 'Order created',
       order: await this.ordersService.create({
-        userId: user.role === ROLE.CUSTOMER ? user.sub : payload.userId,
+        userId: user.sub,
+        cart: payload.cart,
       }),
     };
   }
