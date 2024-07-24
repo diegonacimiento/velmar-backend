@@ -93,7 +93,7 @@ export class AuthService {
       });
 
       if (user.recoveryToken !== token) {
-        throw new UnauthorizedException();
+        throw new UnauthorizedException('Token already used');
       }
 
       const passwordHashed = await bcrypt.hash(newPassword, 10);
