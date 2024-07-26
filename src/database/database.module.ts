@@ -19,6 +19,7 @@ import config from 'src/config';
           host,
           port,
           autoLoadEntities: true,
+          synchronize: true,
         };
       },
     }),

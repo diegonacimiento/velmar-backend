@@ -12,6 +12,7 @@ import {
 
 import { Order } from './order.entity';
 import { Cart } from './cart.entity';
+import { ROLE } from '../../auth/models/role.model';
 
 @Entity('users')
 export class User {
@@ -31,8 +32,8 @@ export class User {
   @Column({ type: 'varchar', length: 75 })
   fullname: string;
 
-  @Column({ type: 'varchar', length: 25 })
-  role: string;
+  @Column({ type: 'enum', enum: ROLE, default: ROLE.CUSTOMER })
+  role: ROLE;
 
   @Column({ type: 'varchar', length: 45, default: null })
   phone: number;

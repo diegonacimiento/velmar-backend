@@ -9,7 +9,7 @@ import {
 
 import { Product } from '../../products/entities/product.entity';
 import { Cart } from './cart.entity';
-import { Size } from 'src/products/types/product';
+import { Size } from '../../products/types/product';
 
 @Entity('cart_items')
 export class CartItem {

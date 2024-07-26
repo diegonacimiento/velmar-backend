@@ -66,7 +66,7 @@ export class CreateUserDto {
   @IsIn([ROLE.CUSTOMER, ROLE.SALESPERSON], {
     message: 'Role must be "customer" or "salesperson"',
   })
-  readonly role: string;
+  readonly role: ROLE.CUSTOMER | ROLE.SALESPERSON;
 
   @IsPositive()
   @IsOptional()
