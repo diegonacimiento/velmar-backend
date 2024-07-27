@@ -33,7 +33,7 @@ export class Product {
   @Column('simple-json')
   images: Array<ImageProduct>;
 
-  @Column({ type: 'boolean', default: false })
+  @Column({ name: 'is_protected', type: 'boolean', default: false })
   isProtected: boolean;
 
   @Exclude()
