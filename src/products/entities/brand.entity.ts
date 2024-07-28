@@ -22,7 +22,7 @@ export class Brand {
   @Column({ type: 'varchar', length: 60 })
   name: string;
 
-  @Column({ type: 'boolean', default: false })
+  @Column({ name: 'is_protected', type: 'boolean', default: false })
   isProtected: boolean;
 
   @Exclude()

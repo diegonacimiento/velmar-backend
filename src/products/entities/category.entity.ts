@@ -23,7 +23,7 @@ export class Category {
   @Column({ type: 'varchar', length: 255 })
   image: string;
 
-  @Column({ type: 'boolean', default: false })
+  @Column({ name: 'is_protected', type: 'boolean', default: false })
   isProtected: boolean;
 
   @Exclude()
