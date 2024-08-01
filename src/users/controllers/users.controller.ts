@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -24,7 +25,7 @@ import { RoleGuard } from 'src/auth/guards/role.guard';
 import { Role } from 'src/auth/decorators/role.decorator';
 import { ROLE } from 'src/auth/models/role.model';
 import { Public } from 'src/auth/decorators/public.decorator';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { PayloadToken } from 'src/auth/models/token.model';
 
 @ApiTags('users')
@@ -116,11 +117,22 @@ export class UsersController {
 
   @Role(ROLE.SUPERADMIN, ROLE.SALESPERSON, ROLE.CUSTOMER)
   @Delete()
-  async deleteMyUser(@Req() req: Request) {
+  async deleteMyUser(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const user = req.user as PayloadToken;
+    const response = await this.usersService.delete(user.sub);
+    res.cookie(process.env.TOKEN_NAME, '', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      // sameSite: 'strict',
+      path: '/',
+      expires: new Date(Date.now() * 0),
+    });
     return {
       message: 'User deleted',
-      user: await this.usersService.delete(user.sub),
+      user: response,
     };
   }
 }
