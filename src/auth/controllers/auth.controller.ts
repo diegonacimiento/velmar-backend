@@ -42,6 +42,7 @@ export class AuthController {
       sameSite: 'strict',
       path: '/',
       expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+      domain: process.env.FRONTEND_URL,
     });
 
     return {
@@ -60,6 +61,7 @@ export class AuthController {
       sameSite: 'strict',
       path: '/',
       expires: new Date(Date.now() * 0),
+      domain: process.env.FRONTEND_URL,
     });
 
     return 'Logout success';

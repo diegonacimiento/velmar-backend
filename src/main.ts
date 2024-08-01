@@ -36,7 +36,7 @@ async function bootstrap() {
 
   app.enableCors({
     origin: (origin, callback) => {
-      if (!origin || [process.env.FRONTEND_URL].includes(origin)) {
+      if ([process.env.FRONTEND_URL].includes(origin)) {
         callback(null, true);
       } else {
         callback(new Error('Access not allowed by CORS'));

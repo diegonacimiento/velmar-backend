@@ -129,6 +129,7 @@ export class UsersController {
       sameSite: 'strict',
       path: '/',
       expires: new Date(Date.now() * 0),
+      domain: process.env.FRONTEND_URL,
     });
     return {
       message: 'User deleted',
