@@ -126,7 +126,7 @@ export class UsersController {
     res.cookie(process.env.TOKEN_NAME, '', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      // sameSite: 'strict',
+      sameSite: 'strict',
       path: '/',
       expires: new Date(Date.now() * 0),
     });

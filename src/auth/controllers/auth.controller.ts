@@ -39,7 +39,7 @@ export class AuthController {
     res.cookie(process.env.TOKEN_NAME, token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      // sameSite: 'strict',
+      sameSite: 'strict',
       path: '/',
       expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
     });
@@ -57,7 +57,7 @@ export class AuthController {
     res.cookie(process.env.TOKEN_NAME, '', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      // sameSite: 'strict',
+      sameSite: 'strict',
       path: '/',
       expires: new Date(Date.now() * 0),
     });
