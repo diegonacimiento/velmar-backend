@@ -36,6 +36,8 @@ async function bootstrap() {
 
   app.enableCors({
     origin: (origin, callback) => {
+      console.log(origin);
+      console.log(process.env.FRONTEND_URL);
       if ([process.env.FRONTEND_URL].includes(origin)) {
         callback(null, true);
       } else {
