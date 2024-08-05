@@ -86,6 +86,10 @@ class Product {
   readonly size: Size;
 
   @ApiProperty()
+  @IsString()
+  readonly color: string;
+
+  @ApiProperty()
   @IsObject()
   @IsNotEmptyObject()
   @Type(() => Brand)

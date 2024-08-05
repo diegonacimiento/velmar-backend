@@ -1,9 +1,10 @@
 import { NestFactory, Reflector } from '@nestjs/core';
-import { AppModule } from './app.module';
+import * as cookieParser from 'cookie-parser';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+
+import { AppModule } from './app.module';
 import apiKeyMiddleware from './middlewares/api-key.middleware';
-import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -36,8 +37,6 @@ async function bootstrap() {
 
   app.enableCors({
     origin: (origin, callback) => {
-      console.log(origin);
-      console.log(process.env.FRONTEND_URL);
       if ([process.env.FRONTEND_URL].includes(origin)) {
         callback(null, true);
       } else {

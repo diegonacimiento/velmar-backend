@@ -19,7 +19,7 @@ import config from 'src/config';
           host,
           port,
           autoLoadEntities: true,
-          ssl: true,
+          ssl: configService.env === 'production',
         };
       },
     }),

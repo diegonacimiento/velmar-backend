@@ -11,7 +11,7 @@ import {
 
 import { User } from './user.entity';
 import { Expose } from 'class-transformer';
-import { Size } from 'src/products/types/product';
+import { ImageProduct, Size } from 'src/products/types/product';
 // import { Exclude, Expose } from 'class-transformer';
 
 @Entity('orders')
@@ -46,6 +46,7 @@ export class Order {
     name: string;
     quantity: number;
     size: Size;
+    color: ImageProduct['color'];
     price: string;
     brand: { id: number; name: string; isProtected: boolean };
   }>;

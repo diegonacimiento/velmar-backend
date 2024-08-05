@@ -17,5 +17,6 @@ export default registerAs('config', () => {
     ggKey: process.env.GG_KEY,
     tokenName: process.env.TOKEN_NAME,
     frontendUrl: process.env.FRONTEND_URL,
+    env: process.env.NODE_ENV || 'development',
   };
 });
