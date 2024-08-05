@@ -4,6 +4,7 @@ import {
   Controller,
   Delete,
   Get,
+  Inject,
   Param,
   Post,
   Put,
@@ -12,6 +13,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { ConfigType } from '@nestjs/config';
 
 import { UsersService } from '../services/users.service';
 import { MyParseIntPipe } from 'src/common/my-parse-int/my-parse-int.pipe';
@@ -27,12 +29,16 @@ import { ROLE } from 'src/auth/models/role.model';
 import { Public } from 'src/auth/decorators/public.decorator';
 import { Request, Response } from 'express';
 import { PayloadToken } from 'src/auth/models/token.model';
+import config from 'src/config';
 
 @ApiTags('users')
 @UseGuards(JwtGuard, RoleGuard)
 @Controller('users')
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    @Inject(config.KEY) private configService: ConfigType<typeof config>,
+  ) {}
 
   @Role(ROLE.SUPERADMIN)
   @Get()
@@ -123,13 +129,13 @@ export class UsersController {
   ) {
     const user = req.user as PayloadToken;
     const response = await this.usersService.delete(user.sub);
-    res.cookie(process.env.TOKEN_NAME, '', {
+    res.cookie(this.configService.tokenName, '', {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: this.configService.env === 'production',
       sameSite: 'strict',
       path: '/',
       expires: new Date(Date.now() * 0),
-      domain: process.env.FRONTEND_URL,
+      domain: this.configService.frontendDomain,
     });
     return {
       message: 'User deleted',

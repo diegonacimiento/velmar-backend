@@ -4,6 +4,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Inject,
   Post,
   Req,
   Res,
@@ -12,6 +13,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
+import { ConfigType } from '@nestjs/config';
 
 import { ValidateCredentialsGuard } from '../guards/validate-credentials.guard';
 import { User } from 'src/users/entities/user.entity';
@@ -22,11 +24,15 @@ import {
 } from '../dtos/forgot-password.dto';
 import { Role } from '../decorators/role.decorator';
 import { ROLE } from '../models/role.model';
+import config from 'src/config';
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    @Inject(config.KEY) private configService: ConfigType<typeof config>,
+  ) {}
 
   @UseGuards(ValidateCredentialsGuard, AuthGuard('local'))
   @Post('login')
@@ -36,13 +42,13 @@ export class AuthController {
 
     const token = await this.authService.generateJwt(user);
 
-    res.cookie(process.env.TOKEN_NAME, token, {
+    res.cookie(this.configService.tokenName, token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: this.configService.env === 'production',
       sameSite: 'strict',
       path: '/',
       expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
-      domain: process.env.FRONTEND_URL,
+      domain: this.configService.frontendDomain,
     });
 
     return {
@@ -55,13 +61,13 @@ export class AuthController {
   @Get('logout')
   @HttpCode(HttpStatus.OK)
   async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    res.cookie(process.env.TOKEN_NAME, '', {
+    res.cookie(this.configService.tokenName, '', {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: this.configService.env === 'production',
       sameSite: 'strict',
       path: '/',
       expires: new Date(Date.now() * 0),
-      domain: process.env.FRONTEND_URL,
+      domain: this.configService.frontendDomain,
     });
 
     return 'Logout success';
