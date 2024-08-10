@@ -17,5 +17,12 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false
-  }
+  },
+  "include": [
+    "./api/*.ts",
+    "./*.js",
+    "src/**/*.ts",
+    "test/**/*.ts",
+  ],
+  "exclude": ["node_modules", "dist"],
 }
