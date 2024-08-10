@@ -12,10 +12,10 @@ import {
   FilterOrderDto,
   UpdateOrderDto,
 } from '../dtos/order.dto';
-import { addOneEntity } from 'src/utils/shared-functions';
+import { addOneEntity } from '../../utils/shared-functions';
 import { User } from '../entities/user.entity';
 import { Cart } from '../entities/cart.entity';
-import { relationsOrder, selectOrder } from 'src/utils/select-relations';
+import { relationsOrder, selectOrder } from '../../utils/select-relations';
 import { ORDER_STATUS } from '../model/order-status.model';
 
 @Injectable()

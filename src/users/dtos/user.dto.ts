@@ -13,7 +13,7 @@ import {
   MinLength,
   ValidateNested,
 } from 'class-validator';
-import { ROLE } from 'src/auth/models/role.model';
+import { ROLE } from '../../auth/models/role.model';
 
 class AddressDto {
   @IsOptional()

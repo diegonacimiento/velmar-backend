@@ -20,8 +20,8 @@ import {
   addOneEntity,
   changeEntityRelated,
   removeCategory,
-} from 'src/utils/shared-functions';
-import { ROLE } from 'src/auth/models/role.model';
+} from '../../utils/shared-functions';
+import { ROLE } from '../../auth/models/role.model';
 
 @Injectable()
 export class ProductsService {

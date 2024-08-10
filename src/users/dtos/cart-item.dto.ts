@@ -1,6 +1,6 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty, IsOptional, IsPositive } from 'class-validator';
-import { Size } from 'src/products/types/product';
+import { Size } from '../../products/types/product';
 
 export class CreateCartItemDto {
   @ApiProperty()

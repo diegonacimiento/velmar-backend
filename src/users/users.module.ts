@@ -7,7 +7,7 @@ import { OrdersService } from './services/orders.service';
 import { UsersService } from './services/users.service';
 import { Order } from './entities/order.entity';
 import { User } from './entities/user.entity';
-import { Product } from 'src/products/entities/product.entity';
+import { Product } from '../products/entities/product.entity';
 import { CartsController } from './controllers/carts.controller';
 import { CartItemsController } from './controllers/cart-items.controller';
 import { CartItemsService } from './services/cart-items.service';

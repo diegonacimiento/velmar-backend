@@ -8,10 +8,10 @@ import { DataSource, Repository } from 'typeorm';
 
 import { Category } from '../entities/category.entity';
 import { CreateCategoryDto, UpdateCategoryDto } from '../dtos/category.dto';
-import { addManyEntities, removeCategory } from 'src/utils/shared-functions';
+import { addManyEntities, removeCategory } from '../../utils/shared-functions';
 import { Brand } from '../entities/brand.entity';
 import { Product } from '../entities/product.entity';
-import { ROLE } from 'src/auth/models/role.model';
+import { ROLE } from '../../auth/models/role.model';
 
 @Injectable()
 export class CategoriesService {

@@ -16,7 +16,7 @@ import { Request, Response } from 'express';
 import { ConfigType } from '@nestjs/config';
 
 import { ValidateCredentialsGuard } from '../guards/validate-credentials.guard';
-import { User } from 'src/users/entities/user.entity';
+import { User } from '../../users/entities/user.entity';
 import { AuthService } from '../services/auth.service';
 import {
   ChangePasswordDto,
@@ -24,7 +24,7 @@ import {
 } from '../dtos/forgot-password.dto';
 import { Role } from '../decorators/role.decorator';
 import { ROLE } from '../models/role.model';
-import config from 'src/config';
+import config from '../../config';
 
 @ApiTags('auth')
 @Controller('auth')

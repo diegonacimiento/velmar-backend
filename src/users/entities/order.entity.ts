@@ -11,7 +11,7 @@ import {
 
 import { User } from './user.entity';
 import { Expose } from 'class-transformer';
-import { ImageProduct, Size } from 'src/products/types/product';
+import { ImageProduct, Size } from '../../products/types/product';
 // import { Exclude, Expose } from 'class-transformer';
 
 @Entity('orders')

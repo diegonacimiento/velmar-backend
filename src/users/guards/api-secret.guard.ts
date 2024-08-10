@@ -7,8 +7,8 @@ import {
 import { Observable } from 'rxjs';
 import { Request } from 'express';
 import { Reflector } from '@nestjs/core';
-import { ROLE } from 'src/auth/models/role.model';
-import { ROLE_KEY } from 'src/auth/decorators/role.decorator';
+import { ROLE } from '../../auth/models/role.model';
+import { ROLE_KEY } from '../../auth/decorators/role.decorator';
 
 @Injectable()
 export class ApiSecretGuard implements CanActivate {

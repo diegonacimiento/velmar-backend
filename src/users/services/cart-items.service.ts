@@ -8,10 +8,13 @@ import { Repository } from 'typeorm';
 
 import { CartItem } from '../entities/cart-item.entity';
 import { CreateCartItemDto } from '../dtos/cart-item.dto';
-import { addOneEntity } from 'src/utils/shared-functions';
+import { addOneEntity } from '../../utils/shared-functions';
 import { Cart } from '../entities/cart.entity';
-import { Product } from 'src/products/entities/product.entity';
-import { relationsCartItem, selectCartItem } from 'src/utils/select-relations';
+import { Product } from '../../products/entities/product.entity';
+import {
+  relationsCartItem,
+  selectCartItem,
+} from '../../utils/select-relations';
 
 @Injectable()
 export class CartItemsService {

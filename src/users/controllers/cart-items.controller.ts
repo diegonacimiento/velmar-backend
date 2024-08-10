@@ -13,13 +13,13 @@ import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 
 import { CartItemsService } from '../services/cart-items.service';
-import { MyParseIntPipe } from 'src/common/my-parse-int/my-parse-int.pipe';
+import { MyParseIntPipe } from '../../common/my-parse-int/my-parse-int.pipe';
 import { CreateCartItemDto } from '../dtos/cart-item.dto';
-import { JwtGuard } from 'src/auth/guards/jwt.guard';
-import { RoleGuard } from 'src/auth/guards/role.guard';
-import { Role } from 'src/auth/decorators/role.decorator';
-import { ROLE } from 'src/auth/models/role.model';
-import { PayloadToken } from 'src/auth/models/token.model';
+import { JwtGuard } from '../../auth/guards/jwt.guard';
+import { RoleGuard } from '../../auth/guards/role.guard';
+import { Role } from '../../auth/decorators/role.decorator';
+import { ROLE } from '../../auth/models/role.model';
+import { PayloadToken } from '../../auth/models/token.model';
 
 @ApiTags('cart-items')
 @UseGuards(JwtGuard, RoleGuard)

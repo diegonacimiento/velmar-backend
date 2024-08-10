@@ -8,9 +8,9 @@ import { Repository } from 'typeorm';
 
 import { Cart } from '../entities/cart.entity';
 import { CreateCartDto } from '../dtos/cart.dto';
-import { addOneEntity } from 'src/utils/shared-functions';
+import { addOneEntity } from '../../utils/shared-functions';
 import { User } from '../entities/user.entity';
-import { relationsCart, selectCart } from 'src/utils/select-relations';
+import { relationsCart, selectCart } from '../../utils/select-relations';
 
 @Injectable()
 export class CartsService {

@@ -13,14 +13,14 @@ import { Request } from 'express';
 import { ApiTags } from '@nestjs/swagger';
 
 import { BrandsService } from '../services/brands.service';
-import { MyParseIntPipe } from 'src/common/my-parse-int/my-parse-int.pipe';
+import { MyParseIntPipe } from '../../common/my-parse-int/my-parse-int.pipe';
 import { CreateBrandDto, UpdateBrandDto } from '../dtos/brand.dto';
-import { JwtGuard } from 'src/auth/guards/jwt.guard';
-import { Public } from 'src/auth/decorators/public.decorator';
-import { RoleGuard } from 'src/auth/guards/role.guard';
-import { Role } from 'src/auth/decorators/role.decorator';
-import { ROLE } from 'src/auth/models/role.model';
-import { PayloadToken } from 'src/auth/models/token.model';
+import { JwtGuard } from '../../auth/guards/jwt.guard';
+import { Public } from '../../auth/decorators/public.decorator';
+import { RoleGuard } from '../../auth/guards/role.guard';
+import { Role } from '../../auth/decorators/role.decorator';
+import { ROLE } from '../../auth/models/role.model';
+import { PayloadToken } from '../../auth/models/token.model';
 
 @ApiTags('brands')
 @UseGuards(JwtGuard, RoleGuard)

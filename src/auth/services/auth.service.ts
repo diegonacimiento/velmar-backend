@@ -10,10 +10,10 @@ import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 
-import { User } from 'src/users/entities/user.entity';
+import { User } from '../../users/entities/user.entity';
 import { PayloadToken } from '../models/token.model';
-import { sendEmail } from 'src/utils/nodemailer';
-import config from 'src/config';
+import { sendEmail } from '../../utils/nodemailer';
+import config from '../../config';
 import { ConfigType } from '@nestjs/config';
 import {
   ChangePasswordDto,

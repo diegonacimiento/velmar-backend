@@ -15,7 +15,7 @@ import {
 import { Type } from 'class-transformer';
 
 import { ORDER_STATUS } from '../model/order-status.model';
-import { Size } from 'src/products/types/product';
+import { Size } from '../../products/types/product';
 
 export class CreateOrderDto {
   @ApiProperty()

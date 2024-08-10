@@ -12,9 +12,9 @@ import {
   addCategory,
   addManyEntities,
   removeCategory,
-} from 'src/utils/shared-functions';
+} from '../../utils/shared-functions';
 import { Category } from '../entities/category.entity';
-import { ROLE } from 'src/auth/models/role.model';
+import { ROLE } from '../../auth/models/role.model';
 
 @Injectable()
 export class BrandsService {
