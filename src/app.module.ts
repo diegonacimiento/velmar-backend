@@ -34,6 +34,8 @@ import * as Joi from 'joi';
         GG_EMAIL: Joi.string().required(),
         GG_KEY: Joi.string().required(),
         TOKEN_NAME: Joi.string().required(),
+        FRONTEND_URL: Joi.string().required(),
+        FRONTEND_DOMAIN: Joi.string().required(),
       }),
     }),
     AuthModule,
