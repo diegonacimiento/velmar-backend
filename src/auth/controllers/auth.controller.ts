@@ -45,15 +45,15 @@ export class AuthController {
     res.cookie(this.configService.tokenName, token, {
       httpOnly: true,
       secure: this.configService.env === 'production',
-      sameSite: 'strict',
+      sameSite: 'none',
       path: '/',
       expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
-      domain: this.configService.frontendDomain,
     });
 
     return {
       message: 'Login success',
       role: user.role,
+      token,
     };
   }
 
@@ -64,10 +64,9 @@ export class AuthController {
     res.cookie(this.configService.tokenName, '', {
       httpOnly: true,
       secure: this.configService.env === 'production',
-      sameSite: 'strict',
+      sameSite: 'none',
       path: '/',
       expires: new Date(Date.now() * 0),
-      domain: this.configService.frontendDomain,
     });
 
     return 'Logout success';

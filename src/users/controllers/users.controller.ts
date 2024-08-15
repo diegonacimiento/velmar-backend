@@ -132,10 +132,9 @@ export class UsersController {
     res.cookie(this.configService.tokenName, '', {
       httpOnly: true,
       secure: this.configService.env === 'production',
-      sameSite: 'strict',
+      sameSite: 'none',
       path: '/',
       expires: new Date(Date.now() * 0),
-      domain: this.configService.frontendDomain,
     });
     return {
       message: 'User deleted',
