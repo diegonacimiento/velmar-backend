@@ -25,6 +25,7 @@ import {
 import { Role } from '../decorators/role.decorator';
 import { ROLE } from '../models/role.model';
 import config from '../../config';
+import { JwtService } from '@nestjs/jwt';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -32,6 +33,7 @@ export class AuthController {
   constructor(
     private authService: AuthService,
     @Inject(config.KEY) private configService: ConfigType<typeof config>,
+    private jwtService: JwtService,
   ) {}
 
   @UseGuards(ValidateCredentialsGuard, AuthGuard('local'))
@@ -42,12 +44,16 @@ export class AuthController {
 
     const token = await this.authService.generateJwt(user);
 
+    const { exp } = this.jwtService.decode(token);
+
+    const expires = new Date(exp * 1000);
+
     res.cookie(this.configService.tokenName, token, {
       httpOnly: true,
       secure: this.configService.env === 'production',
       sameSite: 'none',
       path: '/',
-      expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+      expires,
     });
 
     return {
