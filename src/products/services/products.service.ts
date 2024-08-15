@@ -77,6 +77,8 @@ export class ProductsService {
       query = query.andWhere('product.price <= :maxPrice', { maxPrice });
     }
 
+    query = query.orderBy('product.createdAt', 'DESC');
+
     query = query.skip(offset).take(limit);
 
     return query.getMany();
