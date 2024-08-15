@@ -66,7 +66,7 @@ export class AuthService {
         secret: this.configService.jwtSecretRecovery,
       });
 
-      const link = `${this.configService.frontendUrl}/recovery?token=${token}`;
+      const link = `${this.configService.frontendUrl}/new-password?token=${token}`;
 
       user.recoveryToken = token;
 
